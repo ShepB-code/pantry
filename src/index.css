@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-logo: 'Times New Roman', Georgia, 'Noto Serif', serif;
+
+    --background: 30 15% 96%;
+    --foreground: 30 5% 12%;
+
+    --card: 30 15% 99%;
+    --card-foreground: 30 5% 12%;
+
+    --popover: 30 15% 99%;
+    --popover-foreground: 30 5% 12%;
+
+    --primary: 25 60% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 30 50% 94%;
+
+    --secondary: 30 10% 92%;
+    --secondary-foreground: 30 5% 20%;
+
+    --muted: 30 8% 92%;
+    --muted-foreground: 30 5% 45%;
+
+    --accent: 25 60% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 55% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 80% 48%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 210 40% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --success: 152 40% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 30 10% 89%;
+    --input: 30 10% 89%;
+    --ring: 25 60% 48%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 25 20% 15%;
+    --sidebar-foreground: 30 15% 70%;
+    --sidebar-primary: 25 40% 35%;
+    --sidebar-primary-foreground: 30 20% 95%;
+    --sidebar-accent: 25 18% 22%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 25 15% 25%;
+    --sidebar-ring: 25 40% 35%;
+    --sidebar-muted: 30 10% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  /* iOS-style 3D elevation applied to all major card surfaces site-wide.
+     Targets any element using the .bg-card token (and the primary-light idea
+     panel), giving them a soft floating shadow + subtle hover lift. */
+  .bg-card,
+  .bg-primary-light {
+    box-shadow:
+      0 1px 2px hsl(var(--foreground) / 0.04),
+      0 4px 10px -2px hsl(var(--foreground) / 0.08),
+      0 12px 24px -8px hsl(var(--foreground) / 0.12);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .bg-card:hover,
+  .bg-primary-light:hover {
+    box-shadow:
+      0 2px 4px hsl(var(--foreground) / 0.05),
+      0 8px 18px -4px hsl(var(--foreground) / 0.10),
+      0 20px 36px -10px hsl(var(--foreground) / 0.16);
+    transform: translateY(-1px);
+  }
+
+  /* Don't elevate small inline card-colored bits (popovers, dropdowns,
+     selects, dialog content) — those manage their own shadows and shouldn't lift. */
+  [role="menu"].bg-card,
+  [role="listbox"].bg-card,
+  [role="dialog"].bg-card,
+  [data-radix-popper-content-wrapper] .bg-card {
+    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.12);
+  }
+  [role="menu"].bg-card:hover,
+  [role="listbox"].bg-card:hover,
+  [role="dialog"].bg-card:hover,
+  [data-radix-popper-content-wrapper] .bg-card:hover {
+    transform: none;
+  }
+}
