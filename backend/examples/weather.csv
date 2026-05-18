@@ -1,0 +1,4 @@
+business_date,condition,high_temp_f,low_temp_f,precipitation_probability
+2026-05-07,clear,72,54,0.1
+2026-05-08,rain,65,51,0.8
+2026-05-09,clear,75,56,0.0

@@ -1,0 +1,6 @@
+[project]
+name = "pantry-engine"
+version = "0.1.0"
+description = "Forecasting and ordering engine for restaurant inventory management."
+requires-python = ">=3.11"
+readme = "README.md"

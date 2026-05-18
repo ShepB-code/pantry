@@ -1,0 +1,301 @@
+menu_item,weather_metric,correlation,abs_correlation
+Chef Series: Cá Ngân,daily_average_dry_bulb_temperature_f,-0.4931229055910857,0.4931229055910857
+Chef Series: Cá Ngân,daily_minimum_dry_bulb_temperature_f,-0.4843177111734022,0.4843177111734022
+Chef Series: Cá Ngân,daily_maximum_dry_bulb_temperature_f,-0.4836948209073846,0.4836948209073846
+Chef Series: Cá Ngân,daily_average_dew_point_temperature_f,-0.41527197032233926,0.41527197032233926
+Chef Series: Cá Ngân,daily_snow_depth_in,0.354564040488933,0.354564040488933
+Bay Scallop Dynamite,daily_average_dry_bulb_temperature_f,-0.29792625448079535,0.29792625448079535
+Bay Scallop Dynamite,daily_maximum_dry_bulb_temperature_f,-0.29679649127086555,0.29679649127086555
+Bay Scallop Dynamite,daily_minimum_dry_bulb_temperature_f,-0.2874236103955219,0.2874236103955219
+Chef Series: Cá Ngân,daily_snowfall_in,0.2811043927273273,0.2811043927273273
+Bay Scallop Dynamite,daily_average_dew_point_temperature_f,-0.2697522527854075,0.2697522527854075
+Chef Series: Cá Ngân,temperature_range_f,-0.2668520454271099,0.2668520454271099
+Bluefin Tuna Akami,daily_peak_wind_speed_mph,-0.2550836202831573,0.2550836202831573
+Bluefin Tuna Akami,daily_sustained_wind_speed_mph,-0.24129536261427378,0.24129536261427378
+Noriko Oyster,temperature_range_f,-0.22521611307724565,0.22521611307724565
+Bay Scallop Dynamite,daily_snowfall_in,0.2169899226504234,0.2169899226504234
+Ika Aburi,daily_average_wind_speed_mph,0.21509580994337407,0.21509580994337407
+Crab Motoyaki,daily_precipitation_in,-0.2125035873819534,0.2125035873819534
+Noriko Oyster,daily_maximum_dry_bulb_temperature_f,-0.2017110406650062,0.2017110406650062
+Bluefin Tuna Toro,daily_snowfall_in,0.19482283828016242,0.19482283828016242
+Ora King Salmon Avocado,daily_snowfall_in,0.19106306144381854,0.19106306144381854
+CHEFS SET,daily_average_dry_bulb_temperature_f,-0.18763326278468417,0.18763326278468417
+CHEFS SET,daily_minimum_dry_bulb_temperature_f,-0.18686536900234327,0.18686536900234327
+SIGNATURE SET,daily_sustained_wind_speed_mph,0.1838209275624022,0.1838209275624022
+Bluefin Tuna Akami,temperature_range_f,-0.1837749415408774,0.1837749415408774
+Bluefin Tuna Akami,daily_precipitation_in,-0.18342684937251955,0.18342684937251955
+Spicy Ora King Salmon,daily_precipitation_in,-0.1823041911404944,0.1823041911404944
+CHEFS SET,daily_maximum_dry_bulb_temperature_f,-0.1822947092806921,0.1822947092806921
+Bay Scallop Dynamite,temperature_range_f,-0.18222435043614696,0.18222435043614696
+Bluefin Tuna Poke,daily_maximum_dry_bulb_temperature_f,-0.18056959177454016,0.18056959177454016
+Noriko Oyster,daily_average_dry_bulb_temperature_f,-0.17907817452685362,0.17907817452685362
+Bluefin Tuna Akami,daily_maximum_dry_bulb_temperature_f,-0.17622509869499633,0.17622509869499633
+SIGNATURE SET,daily_peak_wind_speed_mph,0.17573780611153375,0.17573780611153375
+Crab Motoyaki,daily_sustained_wind_speed_mph,-0.17538904231467461,0.17538904231467461
+Noriko Oyster,daily_snowfall_in,0.17523718258072665,0.17523718258072665
+Ora King Salmon Avocado,daily_snow_depth_in,-0.17502687451822882,0.17502687451822882
+King Salmon Avocado,daily_sustained_wind_speed_mph,0.17368670253506963,0.17368670253506963
+Puncha Matcha,daily_average_relative_humidity,0.1728381231450756,0.1728381231450756
+Noriko Oyster,daily_average_dew_point_temperature_f,-0.1713739656391092,0.1713739656391092
+Bluefin Tuna Poke,daily_average_dry_bulb_temperature_f,-0.1706003714827252,0.1706003714827252
+Bluefin Tuna Akami,daily_average_dew_point_temperature_f,-0.17006390839550775,0.17006390839550775
+King Salmon Avocado,daily_peak_wind_speed_mph,0.16898471988248615,0.16898471988248615
+Spicy Octopus,daily_average_wind_speed_mph,0.16774192539465518,0.16774192539465518
+Noriko Oyster,daily_precipitation_in,-0.16751400696819851,0.16751400696819851
+Wagyu Tataki,daily_peak_wind_speed_mph,-0.16595731039632405,0.16595731039632405
+Wagyu Tataki,daily_sustained_wind_speed_mph,-0.16564161533672128,0.16564161533672128
+CHEFS SET,daily_average_dew_point_temperature_f,-0.1645730569155419,0.1645730569155419
+Bluefin Tuna Poke,daily_average_dew_point_temperature_f,-0.16295218268287626,0.16295218268287626
+Puncha Matcha,daily_minimum_dry_bulb_temperature_f,-0.16202889603785728,0.16202889603785728
+Crab Motoyaki,daily_peak_wind_speed_mph,-0.16149176205700544,0.16149176205700544
+Bluefin Tuna Akami,daily_average_dry_bulb_temperature_f,-0.1595270757254556,0.1595270757254556
+Bluefin Spicy Tuna,daily_sustained_wind_speed_mph,0.15775646488960712,0.15775646488960712
+Bluefin Tuna Poke,temperature_range_f,-0.1576092763094866,0.1576092763094866
+Bluefin Spicy Tuna,daily_peak_wind_speed_mph,0.1568461748723099,0.1568461748723099
+Spicy Bluefin Tuna,daily_snow_depth_in,-0.15432626485826553,0.15432626485826553
+Bluefin Tuna Akami,daily_average_wind_speed_mph,-0.152530496696677,0.152530496696677
+Tokyo Story,daily_minimum_dry_bulb_temperature_f,-0.15117346523034397,0.15117346523034397
+Hokkaido Uni,daily_snow_depth_in,-0.15115063371682713,0.15115063371682713
+Bluefin Tuna Poke,daily_minimum_dry_bulb_temperature_f,-0.1501961102978182,0.1501961102978182
+Crab Motoyaki,daily_maximum_dry_bulb_temperature_f,-0.14976493964473384,0.14976493964473384
+Puncha Matcha,daily_average_dry_bulb_temperature_f,-0.14852164465307566,0.14852164465307566
+Spicy Octopus,daily_sustained_wind_speed_mph,0.14617045630350664,0.14617045630350664
+Bluefin Tuna Toro,daily_average_dry_bulb_temperature_f,-0.14577127761299039,0.14577127761299039
+Bluefin Tuna Toro,daily_minimum_dry_bulb_temperature_f,-0.14319814924242236,0.14319814924242236
+Bluefin Tuna Toro,daily_maximum_dry_bulb_temperature_f,-0.1428544498349401,0.1428544498349401
+Crab Motoyaki,temperature_range_f,-0.14232937225575448,0.14232937225575448
+Noriko Oyster,daily_minimum_dry_bulb_temperature_f,-0.14183899121221696,0.14183899121221696
+Bluefin Tuna Toro,daily_average_dew_point_temperature_f,-0.13959957090765968,0.13959957090765968
+Hokkaido Uni,daily_precipitation_in,-0.1385784836753547,0.1385784836753547
+Ika Aburi,daily_average_relative_humidity,0.13841620322168766,0.13841620322168766
+Crab Motoyaki,daily_average_dry_bulb_temperature_f,-0.13840701144165926,0.13840701144165926
+Bluefin Tuna Toro,daily_snow_depth_in,-0.13566634916156886,0.13566634916156886
+Crab Motoyaki,daily_average_dew_point_temperature_f,-0.13477804830820259,0.13477804830820259
+Puncha Matcha,daily_maximum_dry_bulb_temperature_f,-0.1334595212873965,0.1334595212873965
+Tokyo Story,daily_snowfall_in,0.13297524638961097,0.13297524638961097
+Ika Aburi,temperature_range_f,-0.13175354285767082,0.13175354285767082
+Puncha Matcha,daily_precipitation_in,0.13155526587827876,0.13155526587827876
+Bluefin Tuna Akami,daily_minimum_dry_bulb_temperature_f,-0.1307712602991094,0.1307712602991094
+Nori Chips & Dip,temperature_range_f,0.12595494475800287,0.12595494475800287
+Ika Aburi,daily_snowfall_in,0.12490580290309765,0.12490580290309765
+Ika Aburi,daily_sustained_wind_speed_mph,0.1248830142746072,0.1248830142746072
+Wagyu Tataki,daily_average_wind_speed_mph,-0.12469594102196495,0.12469594102196495
+Nori Chips & Dip,daily_snow_depth_in,-0.12359888234140291,0.12359888234140291
+Spicy Octopus,daily_peak_wind_speed_mph,0.12119516440774906,0.12119516440774906
+Crab Motoyaki,daily_minimum_dry_bulb_temperature_f,-0.11844671161056257,0.11844671161056257
+Ika Aburi,daily_peak_wind_speed_mph,0.11804950161480318,0.11804950161480318
+Sunomono Sour,daily_average_wind_speed_mph,0.1179738942122129,0.1179738942122129
+Tokyo Story,daily_average_dry_bulb_temperature_f,-0.1168616068801081,0.1168616068801081
+Sweet Shrimp,daily_average_dew_point_temperature_f,-0.1134553107383288,0.1134553107383288
+Wagyu Tataki,temperature_range_f,-0.1104189336300506,0.1104189336300506
+California,daily_minimum_dry_bulb_temperature_f,-0.108878212120016,0.108878212120016
+Tokyo Story,daily_average_dew_point_temperature_f,-0.10879777581105453,0.10879777581105453
+Sweet Shrimp,temperature_range_f,-0.10841395035987651,0.10841395035987651
+California,daily_average_dry_bulb_temperature_f,-0.10656095476754525,0.10656095476754525
+Chef Series: Cá Ngân,daily_average_relative_humidity,0.10476694496820536,0.10476694496820536
+Sweet Shrimp,daily_average_relative_humidity,-0.10475365182343699,0.10475365182343699
+Yellowtail,daily_sustained_wind_speed_mph,0.10367387384812174,0.10367387384812174
+California,daily_average_dew_point_temperature_f,-0.10351113775319853,0.10351113775319853
+Ora King Salmon Avocado,daily_average_relative_humidity,0.10343982345717169,0.10343982345717169
+Yellowtail,daily_peak_wind_speed_mph,0.10305006423885672,0.10305006423885672
+California,daily_maximum_dry_bulb_temperature_f,-0.10195759881937659,0.10195759881937659
+Sweet Shrimp,daily_sustained_wind_speed_mph,-0.09988072481241347,0.09988072481241347
+Puncha Matcha,daily_average_wind_speed_mph,-0.0993046152008461,0.0993046152008461
+Nori Chips & Dip,daily_average_wind_speed_mph,0.09837335063485773,0.09837335063485773
+SIGNATURE SET,daily_average_wind_speed_mph,0.09821284302106194,0.09821284302106194
+Crab Motoyaki,daily_average_wind_speed_mph,-0.09653952783199717,0.09653952783199717
+Sweet Shrimp,daily_maximum_dry_bulb_temperature_f,-0.09637065195749246,0.09637065195749246
+Sunomono Sour,daily_average_relative_humidity,0.09604549594882236,0.09604549594882236
+Hokkaido Uni,temperature_range_f,0.0954567882834784,0.0954567882834784
+Yellowtail,daily_minimum_dry_bulb_temperature_f,-0.09516809743654069,0.09516809743654069
+Bluefin Tuna Poke,daily_precipitation_in,-0.09509926723663942,0.09509926723663942
+Nori Chips & Dip,daily_sustained_wind_speed_mph,0.09427026719094006,0.09427026719094006
+CHEFS SET,temperature_range_f,-0.09235575172901685,0.09235575172901685
+Wagyu Tataki,daily_maximum_dry_bulb_temperature_f,-0.09160811196308502,0.09160811196308502
+Spicy Octopus,daily_precipitation_in,-0.09125123410837452,0.09125123410837452
+Puncha Matcha,daily_average_dew_point_temperature_f,-0.0909800132965987,0.0909800132965987
+King Salmon Avocado,daily_average_wind_speed_mph,0.09017915647788864,0.09017915647788864
+Yellowtail,daily_average_dew_point_temperature_f,-0.08992949713095517,0.08992949713095517
+CHEFS SET,daily_snowfall_in,0.0899149210759396,0.0899149210759396
+Bluefin Tuna Akami,daily_average_relative_humidity,-0.08889409012835223,0.08889409012835223
+Tokyo Story,daily_precipitation_in,-0.08817730977947841,0.08817730977947841
+Spicy Ora King Salmon,daily_minimum_dry_bulb_temperature_f,-0.08786249885281999,0.08786249885281999
+Yellowtail,daily_average_dry_bulb_temperature_f,-0.08726435427448481,0.08726435427448481
+Spicy Ora King Salmon,daily_snow_depth_in,-0.08717885975346289,0.08717885975346289
+Spicy Ora King Salmon,daily_average_dew_point_temperature_f,-0.08714669399255912,0.08714669399255912
+Tokyo Story,daily_maximum_dry_bulb_temperature_f,-0.0870521452974933,0.0870521452974933
+Spicy Ora King Salmon,daily_average_dry_bulb_temperature_f,-0.08697653374893313,0.08697653374893313
+Noriko Oyster,daily_snow_depth_in,0.08527662527362055,0.08527662527362055
+Sweet Shrimp,daily_average_dry_bulb_temperature_f,-0.08503511770224914,0.08503511770224914
+Spicy Bluefin Tuna,temperature_range_f,0.08491596495859392,0.08491596495859392
+Sweet Shrimp,daily_peak_wind_speed_mph,-0.08376921907285786,0.08376921907285786
+Spicy Ora King Salmon,daily_maximum_dry_bulb_temperature_f,-0.08359978869970545,0.08359978869970545
+Tokyo Story,daily_average_wind_speed_mph,0.08205575866617883,0.08205575866617883
+Spicy Octopus,daily_snow_depth_in,-0.08161701864504517,0.08161701864504517
+Tokyo Story,daily_snow_depth_in,0.08056230888302937,0.08056230888302937
+Bluefin Spicy Tuna,daily_average_wind_speed_mph,0.0800831447614589,0.0800831447614589
+Spicy Bluefin Tuna,daily_maximum_dry_bulb_temperature_f,0.07991508612623281,0.07991508612623281
+Nori Chips & Dip,daily_maximum_dry_bulb_temperature_f,0.07940073549621382,0.07940073549621382
+Wagyu Tataki,daily_average_dry_bulb_temperature_f,-0.07930372122692762,0.07930372122692762
+Yellowtail,daily_maximum_dry_bulb_temperature_f,-0.07863488695820658,0.07863488695820658
+Bluefin Tuna Toro,temperature_range_f,-0.07850944137808548,0.07850944137808548
+Puncha Matcha,daily_peak_wind_speed_mph,-0.07697611436965719,0.07697611436965719
+Ika Aburi,daily_snow_depth_in,-0.07595219733302318,0.07595219733302318
+Yellowtail,daily_average_wind_speed_mph,0.07436578740983836,0.07436578740983836
+Tokyo Story,temperature_range_f,0.07325350389292062,0.07325350389292062
+Nori Chips & Dip,daily_precipitation_in,-0.07286915751817342,0.07286915751817342
+Tokyo Story,daily_sustained_wind_speed_mph,0.07282140578891033,0.07282140578891033
+Crab Motoyaki,daily_snowfall_in,0.07259980351327638,0.07259980351327638
+Bluefin Tuna Toro,daily_precipitation_in,-0.07180064694700358,0.07180064694700358
+Spicy Bluefin Tuna,daily_average_dry_bulb_temperature_f,0.07158439868797499,0.07158439868797499
+Spicy Ora King Salmon,daily_average_wind_speed_mph,0.07090720948965251,0.07090720948965251
+Sunomono Sour,daily_snow_depth_in,-0.07062561378028287,0.07062561378028287
+Hokkaido Uni,daily_maximum_dry_bulb_temperature_f,0.0699827262447553,0.0699827262447553
+Chef Series: Cá Ngân,daily_average_wind_speed_mph,0.06937308156589461,0.06937308156589461
+Spicy Bluefin Tuna,daily_average_dew_point_temperature_f,0.0681038686815116,0.0681038686815116
+Sweet Shrimp,daily_minimum_dry_bulb_temperature_f,-0.06733654446836672,0.06733654446836672
+Sweet Shrimp,daily_precipitation_in,-0.06712254223245892,0.06712254223245892
+Ora King Salmon Avocado,temperature_range_f,-0.06536474796086489,0.06536474796086489
+Sunomono Sour,daily_sustained_wind_speed_mph,0.065036653855634,0.065036653855634
+Wagyu Tataki,daily_average_relative_humidity,0.06490009014369887,0.06490009014369887
+California,daily_snow_depth_in,-0.06254630109919236,0.06254630109919236
+Sunomono Sour,temperature_range_f,-0.062012096645114555,0.062012096645114555
+Nori Chips & Dip,daily_average_dry_bulb_temperature_f,0.06170542247927512,0.06170542247927512
+Puncha Matcha,daily_sustained_wind_speed_mph,-0.06168028950018877,0.06168028950018877
+Nori Chips & Dip,daily_peak_wind_speed_mph,0.060248097734982964,0.060248097734982964
+Wagyu Tataki,daily_minimum_dry_bulb_temperature_f,-0.060122947908619585,0.060122947908619585
+Nori Chips & Dip,daily_average_relative_humidity,0.058585736253032164,0.058585736253032164
+Spicy Bluefin Tuna,daily_minimum_dry_bulb_temperature_f,0.05847015063494187,0.05847015063494187
+Hokkaido Uni,daily_average_dry_bulb_temperature_f,0.05824611747422329,0.05824611747422329
+Ora King Salmon Avocado,daily_peak_wind_speed_mph,-0.05705820778227781,0.05705820778227781
+Chef Series: Cá Ngân,daily_precipitation_in,-0.05618103887032298,0.05618103887032298
+King Salmon Avocado,daily_precipitation_in,0.05607945502162059,0.05607945502162059
+Bluefin Tuna Akami,daily_snow_depth_in,-0.055219265786531246,0.055219265786531246
+Noriko Oyster,daily_sustained_wind_speed_mph,-0.054036332295323966,0.054036332295323966
+California,daily_snowfall_in,0.053999385240537434,0.053999385240537434
+Spicy Ora King Salmon,daily_sustained_wind_speed_mph,0.05349382232216928,0.05349382232216928
+Tokyo Story,daily_average_relative_humidity,-0.05343980397777742,0.05343980397777742
+Bluefin Tuna Toro,daily_average_relative_humidity,0.05323412019353298,0.05323412019353298
+California,daily_peak_wind_speed_mph,0.0528618383120907,0.0528618383120907
+Yellowtail,daily_snowfall_in,0.05200593421859578,0.05200593421859578
+Bluefin Spicy Tuna,daily_average_dew_point_temperature_f,-0.05157157461893703,0.05157157461893703
+Bay Scallop Dynamite,daily_average_relative_humidity,0.050784174801908784,0.050784174801908784
+King Salmon Avocado,daily_snow_depth_in,0.05050831187684847,0.05050831187684847
+Bay Scallop Dynamite,daily_precipitation_in,-0.05015781413750041,0.05015781413750041
+Nori Chips & Dip,daily_average_dew_point_temperature_f,0.0500693909835982,0.0500693909835982
+Spicy Octopus,daily_average_relative_humidity,0.04958035950666669,0.04958035950666669
+Yellowtail,daily_average_relative_humidity,0.04858716279018641,0.04858716279018641
+Yellowtail,daily_snow_depth_in,-0.047398792614114255,0.047398792614114255
+Hokkaido Uni,daily_average_dew_point_temperature_f,0.0469875782090537,0.0469875782090537
+CHEFS SET,daily_average_relative_humidity,0.04641212965426705,0.04641212965426705
+Sunomono Sour,daily_peak_wind_speed_mph,0.046333961007374,0.046333961007374
+California,daily_precipitation_in,-0.04612581162855997,0.04612581162855997
+Wagyu Tataki,daily_snow_depth_in,-0.045913520624337116,0.045913520624337116
+Bluefin Spicy Tuna,daily_average_dry_bulb_temperature_f,-0.045391749095728844,0.045391749095728844
+Bluefin Spicy Tuna,daily_minimum_dry_bulb_temperature_f,-0.04486872099450257,0.04486872099450257
+Bluefin Spicy Tuna,daily_maximum_dry_bulb_temperature_f,-0.04481826689341394,0.04481826689341394
+King Salmon Avocado,daily_average_dew_point_temperature_f,-0.0444667726697859,0.0444667726697859
+Sunomono Sour,daily_maximum_dry_bulb_temperature_f,-0.043744001068311576,0.043744001068311576
+Bluefin Tuna Akami,daily_snowfall_in,-0.04362981886082309,0.04362981886082309
+California,temperature_range_f,-0.04338563222449243,0.04338563222449243
+King Salmon Avocado,daily_minimum_dry_bulb_temperature_f,-0.043334368655408406,0.043334368655408406
+CHEFS SET,daily_average_wind_speed_mph,-0.0428177690618608,0.0428177690618608
+Spicy Octopus,temperature_range_f,0.0426818539675774,0.0426818539675774
+Ika Aburi,daily_precipitation_in,-0.04259416951096424,0.04259416951096424
+Spicy Ora King Salmon,daily_peak_wind_speed_mph,0.042116636905490876,0.042116636905490876
+Spicy Bluefin Tuna,daily_average_wind_speed_mph,-0.0416442039028197,0.0416442039028197
+King Salmon Avocado,daily_average_dry_bulb_temperature_f,-0.041217678391859344,0.041217678391859344
+SIGNATURE SET,daily_average_dew_point_temperature_f,-0.04077448876535454,0.04077448876535454
+Hokkaido Uni,daily_minimum_dry_bulb_temperature_f,0.04006969759522205,0.04006969759522205
+Hokkaido Uni,daily_snowfall_in,-0.039120026137245544,0.039120026137245544
+King Salmon Avocado,daily_maximum_dry_bulb_temperature_f,-0.038799661059032195,0.038799661059032195
+Wagyu Tataki,daily_average_dew_point_temperature_f,-0.03863451040763257,0.03863451040763257
+Spicy Ora King Salmon,temperature_range_f,-0.038248916913280404,0.038248916913280404
+Noriko Oyster,daily_average_relative_humidity,-0.037945565700147725,0.037945565700147725
+Tokyo Story,daily_peak_wind_speed_mph,0.03767270417727993,0.03767270417727993
+Nori Chips & Dip,daily_snowfall_in,0.03731513865273119,0.03731513865273119
+Spicy Octopus,daily_maximum_dry_bulb_temperature_f,0.036897645557334394,0.036897645557334394
+Bluefin Spicy Tuna,daily_snow_depth_in,0.03672110261868525,0.03672110261868525
+Nori Chips & Dip,daily_minimum_dry_bulb_temperature_f,0.03614575355634338,0.03614575355634338
+Hokkaido Uni,daily_average_relative_humidity,0.03589067759955839,0.03589067759955839
+Sunomono Sour,daily_average_dry_bulb_temperature_f,-0.03564673808573869,0.03564673808573869
+SIGNATURE SET,daily_minimum_dry_bulb_temperature_f,-0.035553287663218955,0.035553287663218955
+Spicy Octopus,daily_average_dew_point_temperature_f,0.035405827306235906,0.035405827306235906
+Bluefin Tuna Poke,daily_snowfall_in,0.035329784143920566,0.035329784143920566
+Spicy Bluefin Tuna,daily_peak_wind_speed_mph,-0.035316345201534274,0.035316345201534274
+SIGNATURE SET,daily_snow_depth_in,0.03514032175289731,0.03514032175289731
+Noriko Oyster,daily_peak_wind_speed_mph,-0.03386202054887526,0.03386202054887526
+SIGNATURE SET,daily_average_dry_bulb_temperature_f,-0.03373531358631291,0.03373531358631291
+CHEFS SET,daily_sustained_wind_speed_mph,-0.03265601830013245,0.03265601830013245
+Spicy Octopus,daily_average_dry_bulb_temperature_f,0.0325538276465546,0.0325538276465546
+Ora King Salmon Avocado,daily_maximum_dry_bulb_temperature_f,-0.032203741213411435,0.032203741213411435
+Ika Aburi,daily_average_dew_point_temperature_f,0.032103559903310104,0.032103559903310104
+Ika Aburi,daily_maximum_dry_bulb_temperature_f,-0.03196917854088991,0.03196917854088991
+Hokkaido Uni,daily_average_wind_speed_mph,0.03184345740847022,0.03184345740847022
+SIGNATURE SET,daily_maximum_dry_bulb_temperature_f,-0.031723316350471056,0.031723316350471056
+Spicy Bluefin Tuna,daily_average_relative_humidity,0.031691737062581445,0.031691737062581445
+Wagyu Tataki,daily_precipitation_in,-0.031182928076632414,0.031182928076632414
+Spicy Bluefin Tuna,daily_precipitation_in,0.03023892296584738,0.03023892296584738
+Spicy Bluefin Tuna,daily_sustained_wind_speed_mph,-0.02874595701011503,0.02874595701011503
+SIGNATURE SET,daily_precipitation_in,0.028399521586630543,0.028399521586630543
+Ika Aburi,daily_minimum_dry_bulb_temperature_f,0.02821813793495018,0.02821813793495018
+California,daily_sustained_wind_speed_mph,0.026627106828758428,0.026627106828758428
+Spicy Ora King Salmon,daily_average_relative_humidity,-0.026196099363941815,0.026196099363941815
+Wagyu Tataki,daily_snowfall_in,-0.025851621072434938,0.025851621072434938
+CHEFS SET,daily_snow_depth_in,0.025455525178181913,0.025455525178181913
+Spicy Octopus,daily_minimum_dry_bulb_temperature_f,0.02516211796672882,0.02516211796672882
+Bluefin Spicy Tuna,temperature_range_f,-0.02473977566641154,0.02473977566641154
+Bay Scallop Dynamite,daily_snow_depth_in,0.024426592799666073,0.024426592799666073
+Sunomono Sour,daily_minimum_dry_bulb_temperature_f,-0.023808627854879673,0.023808627854879673
+Chef Series: Cá Ngân,daily_peak_wind_speed_mph,0.023528481226628897,0.023528481226628897
+Bluefin Tuna Poke,daily_snow_depth_in,-0.023403287323103806,0.023403287323103806
+Bluefin Tuna Toro,daily_average_wind_speed_mph,0.023331967071110644,0.023331967071110644
+Bay Scallop Dynamite,daily_peak_wind_speed_mph,-0.023202069298839834,0.023202069298839834
+Bluefin Tuna Poke,daily_peak_wind_speed_mph,0.0219252294039189,0.0219252294039189
+Ora King Salmon Avocado,daily_precipitation_in,-0.02192242382132077,0.02192242382132077
+Ora King Salmon Avocado,daily_average_dry_bulb_temperature_f,-0.021839063055573316,0.021839063055573316
+Sweet Shrimp,daily_snowfall_in,0.021596031126009562,0.021596031126009562
+Ora King Salmon Avocado,daily_sustained_wind_speed_mph,-0.02112551959233102,0.02112551959233102
+Bluefin Tuna Poke,daily_average_relative_humidity,-0.020215105050755838,0.020215105050755838
+Puncha Matcha,temperature_range_f,-0.019823542272877175,0.019823542272877175
+Spicy Octopus,daily_snowfall_in,-0.019656744711834512,0.019656744711834512
+Bluefin Tuna Toro,daily_peak_wind_speed_mph,-0.019437181700433195,0.019437181700433195
+Bluefin Spicy Tuna,daily_precipitation_in,0.018296169913498386,0.018296169913498386
+Puncha Matcha,daily_snowfall_in,0.017742248221203457,0.017742248221203457
+CHEFS SET,daily_precipitation_in,-0.01606011470359249,0.01606011470359249
+Ora King Salmon Avocado,daily_average_wind_speed_mph,0.015555488224556296,0.015555488224556296
+Spicy Ora King Salmon,daily_snowfall_in,0.014763685826500656,0.014763685826500656
+Bay Scallop Dynamite,daily_average_wind_speed_mph,0.014245721294765123,0.014245721294765123
+California,daily_average_relative_humidity,0.013995980710304003,0.013995980710304003
+Sunomono Sour,daily_precipitation_in,0.013840575196095179,0.013840575196095179
+King Salmon Avocado,temperature_range_f,-0.012908236442550229,0.012908236442550229
+Bluefin Tuna Poke,daily_sustained_wind_speed_mph,-0.01272071588694218,0.01272071588694218
+Yellowtail,temperature_range_f,-0.01224849007439392,0.01224849007439392
+Sunomono Sour,daily_average_dew_point_temperature_f,-0.012240886875245494,0.012240886875245494
+SIGNATURE SET,daily_snowfall_in,0.011926824622913853,0.011926824622913853
+Crab Motoyaki,daily_average_relative_humidity,0.011566234403741786,0.011566234403741786
+SIGNATURE SET,temperature_range_f,-0.010322266006724888,0.010322266006724888
+Chef Series: Cá Ngân,daily_sustained_wind_speed_mph,0.009736710477879404,0.009736710477879404
+Sweet Shrimp,daily_average_wind_speed_mph,-0.009734233300249242,0.009734233300249242
+Hokkaido Uni,daily_peak_wind_speed_mph,-0.009587836740283465,0.009587836740283465
+Yellowtail,daily_precipitation_in,-0.009479976055249782,0.009479976055249782
+Sweet Shrimp,daily_snow_depth_in,-0.008845503848119402,0.008845503848119402
+Bluefin Spicy Tuna,daily_snowfall_in,0.008661828686400213,0.008661828686400213
+Bluefin Tuna Poke,daily_average_wind_speed_mph,-0.008224363629526547,0.008224363629526547
+King Salmon Avocado,daily_average_relative_humidity,0.007761884004764467,0.007761884004764467
+Puncha Matcha,daily_snow_depth_in,-0.007140704049084171,0.007140704049084171
+Ora King Salmon Avocado,daily_minimum_dry_bulb_temperature_f,-0.007123809655017646,0.007123809655017646
+Bay Scallop Dynamite,daily_sustained_wind_speed_mph,-0.006567583219610409,0.006567583219610409
+Spicy Bluefin Tuna,daily_snowfall_in,0.006522969538708879,0.006522969538708879
+Ika Aburi,daily_average_dry_bulb_temperature_f,-0.005643946954420435,0.005643946954420435
+Ora King Salmon Avocado,daily_average_dew_point_temperature_f,-0.005611170548954256,0.005611170548954256
+California,daily_average_wind_speed_mph,0.004836973365798146,0.004836973365798146
+Crab Motoyaki,daily_snow_depth_in,0.0043383914760162555,0.0043383914760162555
+King Salmon Avocado,daily_snowfall_in,0.004084233269956945,0.004084233269956945
+Sunomono Sour,daily_snowfall_in,0.0038427467340142593,0.0038427467340142593
+Hokkaido Uni,daily_sustained_wind_speed_mph,-0.0037670820836392758,0.0037670820836392758
+Noriko Oyster,daily_average_wind_speed_mph,0.0028784486368026736,0.0028784486368026736
+SIGNATURE SET,daily_average_relative_humidity,-0.0021540978099556913,0.0021540978099556913
+Bluefin Tuna Toro,daily_sustained_wind_speed_mph,0.001979191097323639,0.001979191097323639
+Bluefin Spicy Tuna,daily_average_relative_humidity,0.0009311766905396925,0.0009311766905396925
+CHEFS SET,daily_peak_wind_speed_mph,0.000300393018544496,0.000300393018544496

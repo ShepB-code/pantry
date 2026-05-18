@@ -1,0 +1,15 @@
+business_date,menu_item_id,quantity,revenue,source
+2026-04-30,burger,44,704,toast
+2026-05-01,burger,58,928,toast
+2026-05-02,burger,71,1136,toast
+2026-05-03,burger,49,784,toast
+2026-05-04,burger,38,608,toast
+2026-05-05,burger,41,656,toast
+2026-05-06,burger,43,688,toast
+2026-04-30,salad,31,434,toast
+2026-05-01,salad,35,490,toast
+2026-05-02,salad,42,588,toast
+2026-05-03,salad,34,476,toast
+2026-05-04,salad,28,392,toast
+2026-05-05,salad,29,406,toast
+2026-05-06,salad,30,420,toast
