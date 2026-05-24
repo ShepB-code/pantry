@@ -23,43 +23,22 @@ const priceWatch = [
   { item: "Sesame oil", supplier: "Sysco", from: "$7.50/btl", to: "$8.00/btl", change: "+6.7%", severity: "warning" },
 ];
 
-// Simulated invoice parse result
-const mockInvoiceChanges = [
-  {
-    item: "Ribeye (Prime)",
-    unit: "lb",
-    oldPrice: 17.80,
-    newPrice: 18.50,
-    pctChange: 3.9,
-    severity: "warning" as const,
-    affectedDishes: [
-      { name: "Ribeye (12oz)", currentCost: 28.4, newCost: 30.1, currentMargin: 73, newMargin: 71, currentMenuPrice: 52 },
-    ],
-  },
-  {
-    item: "Salmon fillet",
-    unit: "lb",
-    oldPrice: 12.00,
-    newPrice: 13.20,
-    pctChange: 10.0,
-    severity: "destructive" as const,
-    affectedDishes: [
-      { name: "Miso salmon bowl", currentCost: 28.4, newCost: 34.1, currentMargin: 72, newMargin: 66, currentMenuPrice: 24 },
-    ],
-  },
-  {
-    item: "Sesame oil",
-    unit: "btl",
-    oldPrice: 7.50,
-    newPrice: 8.00,
-    pctChange: 6.7,
-    severity: "warning" as const,
-    affectedDishes: [
-      { name: "Bulgogi bibimbap", currentCost: 21.0, newCost: 21.4, currentMargin: 79, newMargin: 79, currentMenuPrice: 22 },
-      { name: "Japchae", currentCost: 17.5, newCost: 17.8, currentMargin: 83, newMargin: 83, currentMenuPrice: 12 },
-    ],
-  },
-];
+interface InvoiceChange {
+  item: string;
+  unit: string;
+  oldPrice: number;
+  newPrice: number;
+  pctChange: number;
+  severity: "warning" | "destructive";
+  affectedDishes: {
+    name: string;
+    currentCost: number;
+    newCost: number;
+    currentMargin: number;
+    newMargin: number;
+    currentMenuPrice: number;
+  }[];
+}
 
 type ParseState = "idle" | "uploading" | "parsing" | "done" | "accepted";
 
@@ -153,10 +132,48 @@ export default function Suppliers() {
   const [acceptedChanges, setAcceptedChanges] = useState<Set<number>>(new Set());
   const [dragOver, setDragOver] = useState(false);
 
-  const simulateInvoiceParse = () => {
+  const [invoiceChanges, setInvoiceChanges] = useState<InvoiceChange[]>([]);
+
+  const uploadInvoice = async (file: File) => {
     setParseState("uploading");
-    setTimeout(() => setParseState("parsing"), 900);
-    setTimeout(() => setParseState("done"), 2200);
+    
+    // Switch to parsing state halfway through simulation to mimic processing steps
+    const timer = setTimeout(() => setParseState("parsing"), 1000);
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const res = await fetch("/api/upload/invoice", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) throw new Error("Upload failed");
+      
+      const data = await res.json();
+      setInvoiceChanges(data);
+      setParseState("done");
+    } catch (err) {
+      console.error(err);
+      setParseState("idle"); // reset on error
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      uploadInvoice(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      uploadInvoice(e.target.files[0]);
+    }
   };
 
   const acceptChange = (idx: number) => {
@@ -164,7 +181,7 @@ export default function Suppliers() {
   };
 
   const acceptAll = () => {
-    setAcceptedChanges(new Set(mockInvoiceChanges.map((_, i) => i)));
+    setAcceptedChanges(new Set(invoiceChanges.map((_, i) => i)));
     setTimeout(() => setParseState("accepted"), 400);
   };
 
@@ -271,18 +288,20 @@ export default function Suppliers() {
           <div
             onDragOver={e => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
-            onDrop={e => { e.preventDefault(); setDragOver(false); simulateInvoiceParse(); }}
-            onClick={simulateInvoiceParse}
+            onDrop={handleDrop}
             className={cn(
-              "border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors",
+              "border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center gap-3 transition-colors",
               dragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/30"
             )}
           >
-            <Upload className="h-10 w-10 text-muted-foreground" />
-            <div className="text-center space-y-1">
-              <p className="font-medium text-sm">Drop invoice PDF here or click to upload</p>
-              <p className="text-xs text-muted-foreground">Supports PDF, CSV, or image files from Sysco, US Foods, Toast, and 50+ suppliers</p>
-            </div>
+            <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+              <Upload className="h-10 w-10 text-muted-foreground" />
+              <div className="text-center space-y-1 mt-3">
+                <p className="font-medium text-sm">Drop invoice PDF here or click to upload</p>
+                <p className="text-xs text-muted-foreground">Supports PDF, CSV, or image files from Sysco, US Foods, Toast, and 50+ suppliers</p>
+              </div>
+              <input type="file" className="hidden" accept="application/pdf,image/*,.csv" onChange={handleFileSelect} />
+            </label>
             <div className="flex flex-wrap gap-1.5 justify-center pt-2">
               {["Sysco", "US Foods", "Kim's Produce", "Pacific Seafood"].map(s => (
                 <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{s}</span>
@@ -339,7 +358,7 @@ export default function Suppliers() {
             </div>
 
             {/* Change rows */}
-            {mockInvoiceChanges.map((change, idx) => {
+            {invoiceChanges.map((change, idx) => {
               const isExpanded = expandedChange === idx;
               const isAccepted = acceptedChanges.has(idx);
               return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MetricCard } from "@/components/MetricCard";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, Plus, Trash2, X, Minus, Save, ChevronRight, AlertTriangle, CheckCircle2, TrendingUp } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -157,6 +158,17 @@ function parseDollar(s: string): number {
 }
 
 export default function MenuRecipes() {
+  const { data: menuData, isLoading } = useQuery({
+    queryKey: ['menu-stats'],
+    queryFn: async () => {
+      const res = await fetch('/api/menu/stats');
+      if (!res.ok) throw new Error('Network error');
+      return res.json();
+    }
+  });
+
+  const displayMenu = menuData && menuData.length > 0 ? menuData : menu;
+
   const [expanded, setExpanded] = useState<string | null>(null);
   const [menu, setMenu] = useState<Recipe[]>(initialMenu);
   const [drawerState, setDrawerState] = useState<"closed" | "open" | "minimized">("closed");
@@ -360,7 +372,10 @@ export default function MenuRecipes() {
             </tr>
           </thead>
           <tbody>
-            {menu.map((item, i) => {
+            {isLoading && (
+              <tr><td colSpan={6} className="p-4 text-center text-muted-foreground">Loading menu data...</td></tr>
+            )}
+            {!isLoading && displayMenu.map((item: any, i: number) => {
               const isOpen = expanded === item.dish;
               return (
                 <>

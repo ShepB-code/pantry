@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MetricCard } from "@/components/MetricCard";
 import { Truck, AlertTriangle, Info, TrendingUp, ChevronLeft, ChevronRight, Lightbulb, RefreshCw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -39,7 +40,7 @@ const deliveries = [
   { name: "Pacific Seafood", time: "Wed 8:00am", items: 5, badge: "Scheduled", badgeClass: "bg-muted text-muted-foreground" },
 ];
 
-const revenueTrend = [
+const defaultRevenueTrend = [
   { day: "Wed", revenue: 6800, cost: 1980 },
   { day: "Thu", revenue: 7200, cost: 2050 },
   { day: "Fri", revenue: 9400, cost: 2680 },
@@ -79,6 +80,20 @@ function formatRefreshTime(date: Date) {
 }
 
 export default function Dashboard() {
+  const { data: revenueData } = useQuery({
+    queryKey: ['financials-revenue'],
+    queryFn: async () => {
+      const res = await fetch('/api/financials/revenue');
+      if (!res.ok) throw new Error('Network error');
+      return res.json();
+    }
+  });
+
+  const revenueTrend = revenueData || defaultRevenueTrend;
+  
+  // Calculate top line stats
+  const todayRev = revenueTrend.length ? revenueTrend[revenueTrend.length - 1].revenue : 0;
+
   const [windowIdx, setWindowIdx] = useState(1);
   const win = expiringWindows[windowIdx];
   const cycle = (dir: 1 | -1) =>
@@ -126,7 +141,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Today's Projected Revenue" value="$8,420" change="12% vs last Tuesday" positive info="Estimated total sales for today, calculated from historical patterns for this weekday adjusted for current reservations and trends." />
+        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Today's Projected Revenue" value={`$${todayRev.toLocaleString()}`} change="Live POS Data" positive info="Estimated total sales for today, calculated from historical patterns for this weekday adjusted for current reservations and trends." />
         <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Food Cost %" value="28.4%" change="1.2% improvement vs last week" positive info="Cost of food sold divided by food revenue over the last 7 days, expressed as a percentage." />
         <MetricCard
           className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"

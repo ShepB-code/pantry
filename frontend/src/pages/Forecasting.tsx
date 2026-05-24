@@ -1,6 +1,8 @@
 import { MetricCard } from "@/components/MetricCard";
 import { Button } from "@/components/ui/button";
 import { Cloud, Calendar, Trophy } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+
 
 const coverData = [140, 155, 180, 210, 245, 195, 115];
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -15,6 +17,17 @@ const poItems = [
 ];
 
 export default function Forecasting() {
+  const { data: forecasts, isLoading } = useQuery({
+    queryKey: ['menu-forecasts'],
+    queryFn: async () => {
+      const res = await fetch('/api/forecasts/menu?days=7');
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    }
+  });
+
+  const dynamicPoItems = forecasts && forecasts.length > 0 ? forecasts : poItems;
+
   return (
     <div className="space-y-6 max-w-7xl">
       <h1 className="text-2xl font-bold">Forecasting</h1>
@@ -49,12 +62,12 @@ export default function Forecasting() {
       <div className="bg-card rounded-lg border p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="font-semibold">Suggested Purchase Order — Sysco</h2>
-            <p className="text-xs text-muted-foreground">Due by 2pm today</p>
+            <h2 className="font-semibold">Expected Dish Demand</h2>
+            <p className="text-xs text-muted-foreground">Next 7 Days based on POS + Weather Signals</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">Edit order</Button>
-            <Button size="sm">Approve & send</Button>
+            <Button variant="outline" size="sm">Adjust Forecast</Button>
+            <Button size="sm">Export</Button>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -70,20 +83,24 @@ export default function Forecasting() {
               </tr>
             </thead>
             <tbody>
-              {poItems.map((r, i) => (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="p-3 text-center text-muted-foreground">Loading forecasts...</td>
+                </tr>
+              ) : dynamicPoItems.map((r: any, i: number) => (
                 <tr key={i} className="border-b last:border-0">
-                  <td className="p-3 font-medium">{r.item}</td>
-                  <td className="p-3">{r.stock}</td>
-                  <td className="p-3">{r.need}</td>
-                  <td className="p-3">{r.order}</td>
-                  <td className="p-3">{r.unit}</td>
-                  <td className="p-3 text-right">{r.total}</td>
+                  <td className="p-3 font-medium capitalize">{r.item}</td>
+                  <td className="p-3 text-muted-foreground">—</td>
+                  <td className="p-3 font-semibold text-primary">{r.need}</td>
+                  <td className="p-3 text-muted-foreground">—</td>
+                  <td className="p-3 text-muted-foreground">—</td>
+                  <td className="p-3 text-right text-muted-foreground">—</td>
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
-        <p className="text-right font-bold mt-3">Estimated total: $756.50</p>
       </div>
     </div>
   );
