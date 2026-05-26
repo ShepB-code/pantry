@@ -2,13 +2,15 @@ import sys
 import os
 import json
 from pathlib import Path
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from typing import Literal
 import asyncio
 
 from dotenv import load_dotenv
 import google.generativeai as genai
 
 load_dotenv()
+load_dotenv(Path(__file__).resolve().parent / ".env")
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 from fastapi import FastAPI, HTTPException, UploadFile, File
@@ -36,6 +38,7 @@ from pantry_engine.domain import (
     OrderRecommendation,
 )
 from pantry_engine.ingestion import InMemoryDataSource
+from pantry_engine.quick_count import evaluate_submission, resolve_actual_count
 
 app = FastAPI(title="Pantry API")
 
@@ -142,21 +145,168 @@ def load_data() -> tuple[PantryEngine, InMemoryDataSource]:
     return engine, data_source
 
 
-# Global state for MVP
+# Global state for forecasting engine (POS/weather still from CSV exports)
 engine = None
 data_source = None
-inventory_state = {"beef": 12.0}
+
+
+def _inventory_repo():
+    from pantry_engine.db.inventory_repo import InventoryRepository
+
+    return InventoryRepository()
+
+
+def _quick_count_repo():
+    from pantry_engine.db.quick_count_repo import QuickCountRepository
+
+    return QuickCountRepository(inventory_repo=_inventory_repo())
+
+
+class QuickCountLineSubmission(BaseModel):
+    itemId: str
+    mode: Literal["confirm", "numeric", "estimate"]
+    value: float | str | None = None
+    unit: str | None = None
+
+
+class ParLevelUpdate(BaseModel):
+    parLevel: float
 
 
 @app.on_event("startup")
 def startup_event():
+    from pantry_engine.db import init_db
+    from pantry_engine.db.catalog_sync import sync_xtrachef_from_exports
+    from pantry_engine.db.seed import default_location_id, ensure_default_location
+    from pantry_engine.db.session import get_session_factory
+
+    init_db()
+    with get_session_factory()() as session:
+        ensure_default_location(session)
+        try:
+            created, updated = sync_xtrachef_from_exports(
+                session, default_location_id()
+            )
+            print(f"xtraCHEF catalog sync: {created} created, {updated} updated")
+        except Exception as exc:
+            session.rollback()
+            print(f"xtraCHEF catalog sync skipped: {exc}")
+
     global engine, data_source
     engine, data_source = load_data()
 
 
+@app.get("/api/health/db")
+def health_db():
+    from pantry_engine.db import check_connection
+
+    return check_connection()
+
+
 @app.get("/api/inventory")
 def get_inventory():
-    return inventory_state
+    repo = _inventory_repo()
+    return {
+        "locationId": repo.location_id,
+        "items": repo.list_items(),
+        "onHand": repo.on_hand_map(),
+    }
+
+
+@app.post("/api/inventory/sync-catalog")
+def sync_catalog():
+    """Re-import xtraCHEF item library into inventory_items."""
+    from pantry_engine.db.catalog_sync import sync_xtrachef_from_exports
+    from pantry_engine.db.seed import default_location_id
+    from pantry_engine.db.session import get_session_factory
+
+    with get_session_factory()() as session:
+        created, updated = sync_xtrachef_from_exports(session, default_location_id())
+    return {"created": created, "updated": updated}
+
+
+@app.patch("/api/inventory/{item_id}/par")
+def update_inventory_par(item_id: str, body: ParLevelUpdate):
+    try:
+        return _inventory_repo().set_par_level(item_id, body.parLevel)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Item not found") from exc
+
+
+@app.get("/api/inventory/quick-count")
+def get_quick_count():
+    return _quick_count_repo().build_session_payload()
+
+
+@app.post("/api/inventory/quick-count/lines")
+def submit_quick_count_line(body: QuickCountLineSubmission):
+    qc = _quick_count_repo()
+    payload = qc.build_session_payload()
+    if payload["completed"]:
+        raise HTTPException(status_code=400, detail="Quick count already completed for today")
+
+    item = next((i for i in payload["items"] if i["id"] == body.itemId), None)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not in today's quick count list")
+
+    if body.mode == "numeric":
+        if body.value is None:
+            raise HTTPException(status_code=400, detail="Numeric count requires a value")
+        actual = resolve_actual_count(
+            expected=item["expectedOnHand"],
+            par=item["parLevel"],
+            mode="numeric",
+            value=float(body.value),
+        )
+    elif body.mode == "estimate":
+        if not isinstance(body.value, str):
+            raise HTTPException(status_code=400, detail="Estimate requires low, ok, or high")
+        actual = resolve_actual_count(
+            expected=item["expectedOnHand"],
+            par=item["parLevel"],
+            mode="estimate",
+            value=body.value,
+        )
+    else:
+        actual = resolve_actual_count(
+            expected=item["expectedOnHand"],
+            par=item["parLevel"],
+            mode="confirm",
+        )
+
+    evaluation = evaluate_submission(
+        expected=item["expectedOnHand"],
+        par=item["parLevel"],
+        actual=actual,
+        category=item["category"],
+    )
+
+    try:
+        return qc.submit_line(
+            item_id=body.itemId,
+            mode=body.mode,
+            unit=body.unit or item["defaultCountUnit"],
+            name=item["name"],
+            expected=item["expectedOnHand"],
+            actual=actual,
+            flagged=evaluation["flagged"],
+            flags=evaluation["flags"],
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/api/inventory/quick-count/reset")
+def reset_quick_count():
+    return _quick_count_repo().reset_session()
+
+
+@app.post("/api/inventory/quick-count/complete")
+def complete_quick_count():
+    try:
+        return _quick_count_repo().complete_session()
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.get("/api/menu")
@@ -177,7 +327,10 @@ def get_recommendations(days: int = 7):
         start_date = last_sale + timedelta(days=1)
 
     recs = engine.recommend_orders(
-        data_source=data_source, inventory=inventory_state, start=start_date, days=days
+        data_source=data_source,
+        inventory=_inventory_repo().on_hand_map(),
+        start=start_date,
+        days=days,
     )
     return recs
 
@@ -345,6 +498,130 @@ async def upload_invoice(file: UploadFile = File(...)):
     except Exception as e:
         print(f"Gemini API error: {e}")
         raise HTTPException(status_code=500, detail="Failed to parse invoice with AI")
+
+
+@app.post("/api/ingestion/toast/apply")
+def ingestion_toast_apply(business_date: str):
+    """Ingest a pulled inbox CSV and apply recipe-based depletion to on_hand."""
+    from pantry_engine.ingest.toast_sftp.apply import apply_pulled_sales
+
+    try:
+        parsed = date.fromisoformat(business_date)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="business_date must be YYYY-MM-DD") from exc
+    try:
+        return apply_pulled_sales(parsed)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/api/ingestion/toast/pull")
+def ingestion_toast_pull(
+    days: int = 7,
+    force: bool = False,
+    business_date: str | None = None,
+    apply_sales: bool = False,
+):
+    """Pull Toast nightly ItemSelectionDetails exports over SFTP."""
+    from pantry_engine.ingest.paths import IngestPaths
+    from pantry_engine.ingest.runs import RunStatus
+    from pantry_engine.ingest.toast_sftp.config import ToastSftpConfig
+    try:
+        config = ToastSftpConfig.from_env()
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    if days < 1 or days > 7:
+        raise HTTPException(
+            status_code=400,
+            detail="days must be between 1 and 7 (Toast SFTP retention window)",
+        )
+
+    parsed_date: date | None = None
+    if business_date:
+        try:
+            parsed_date = date.fromisoformat(business_date)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="business_date must be YYYY-MM-DD",
+            ) from exc
+
+    from pantry_engine.ingest.toast_sftp.downloader import get_toast_downloader
+    from pantry_engine.ingest.toast_sftp.apply import apply_pulled_sales
+    from pantry_engine.ingest.toast_sftp.pull import pull_item_selection, pull_recent_days
+
+    paths = IngestPaths.from_repo(root)
+    downloader = get_toast_downloader(config)
+    if parsed_date:
+        results = [
+            pull_item_selection(
+                business_date=parsed_date,
+                downloader=downloader,
+                paths=paths,
+                skip_if_unchanged=not force,
+            )
+        ]
+    else:
+        end = date.today() - timedelta(days=1)
+        results = pull_recent_days(
+            downloader=downloader,
+            days=days,
+            end_date=end,
+            paths=paths,
+            skip_if_unchanged=not force,
+        )
+
+    applied: list[dict] = []
+    if apply_sales:
+        for result in results:
+            if result.status.value != "success" or not result.local_path:
+                continue
+            try:
+                applied.append(apply_pulled_sales(result.business_date, paths=paths))
+            except Exception as exc:
+                applied.append(
+                    {"businessDate": result.business_date.isoformat(), "error": str(exc)}
+                )
+
+    return {
+        "results": [
+            {
+                "businessDate": r.business_date.isoformat(),
+                "status": r.status.value,
+                "rowCount": r.row_count,
+                "message": r.message,
+                "skipped": r.skipped,
+                "path": str(r.local_path) if r.local_path else None,
+            }
+            for r in results
+        ],
+        "successCount": sum(1 for r in results if r.status == RunStatus.SUCCESS),
+        "failedCount": sum(1 for r in results if r.status == RunStatus.FAILED),
+        "applied": applied if apply_sales else None,
+    }
+
+
+@app.get("/api/ingestion/runs")
+def ingestion_runs(source: str | None = "toast_sftp", limit: int = 30):
+    from pantry_engine.ingest.runs import IngestionRunStore
+
+    store = IngestionRunStore()
+    runs = store.list_runs(source=source, limit=limit)
+    return [
+        {
+            "id": run.id,
+            "locationId": run.location_id,
+            "source": run.source,
+            "businessDate": run.business_date.isoformat(),
+            "filename": run.filename,
+            "status": run.status.value,
+            "rowCount": run.row_count,
+            "errorMessage": run.error_message,
+            "finishedAt": run.finished_at.isoformat() if run.finished_at else None,
+        }
+        for run in runs
+    ]
 
 
 if __name__ == "__main__":

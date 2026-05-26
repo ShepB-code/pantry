@@ -1,5 +1,9 @@
 # Python / Environments
 .env
+data/ingest/*.db
+data/ingest/inbox/**/*.csv
+data/ingest/archive/**/*.csv
+data/ingest/failed/**/*.csv
 .venv/
 venv/
 env/

@@ -6,6 +6,22 @@ Pantry is an inventory intelligence project for restaurants. This repository con
 - `data_analysis/`: Exploratory Data Analysis notebooks and pipelines.
 - `data/`: Sample datasets and configurations.
 
+## Run locally (MVP UI)
+
+Full steps (Postgres, API, frontend, sample data, troubleshooting): **[backend/docs/RUNNING.md](backend/docs/RUNNING.md)**.
+
+```bash
+# Terminal 1 — API
+cd backend && cp .env.example .env   # set DATABASE_URL if using Postgres
+uv sync && uv run alembic upgrade head
+uv run uvicorn app:app --reload --port 8000
+
+# Terminal 2 — UI (http://localhost:8080, proxies /api → :8000)
+cd frontend && npm install && npm run dev
+```
+
+Put xtraCHEF `*Item_Detail_Report*.csv` in `data/toast/xtraCHEF/` before expecting rows on **Inventory → Current Stock**.
+
 ## Backend Engine
 
 The backend is intentionally small and framework-free:
@@ -21,6 +37,54 @@ The backend is intentionally small and framework-free:
 cd backend
 python3 -m unittest discover -s tests
 ```
+
+### Database (PostgreSQL)
+
+MVP schema: multi-location inventory, daily POS rollups, manual recipes, quick count, ingestion runs.
+
+- [Running locally](backend/docs/RUNNING.md) — start API + frontend, data paths, env, troubleshooting
+- [Database setup](backend/docs/DATABASE.md) — Postgres, migrations, tables
+- [Inventory & naming](backend/docs/INVENTORY.md) — xtraCHEF vs Toast, Ingredient vs Inventory Item, APIs
+
+```bash
+# Postgres via Docker (requires Compose — not bundled with `brew install docker`)
+brew install docker-compose   # if `docker compose` is unknown
+./scripts/start-postgres.sh   # or: docker-compose up -d
+
+cd backend
+cp .env.example .env   # set DATABASE_URL
+uv sync
+uv run alembic upgrade head
+uv run uvicorn app:app --reload --port 8000
+```
+
+No Docker? Use Homebrew Postgres instead — [backend/docs/DATABASE.md](backend/docs/DATABASE.md).
+
+Without `DATABASE_URL`, the API falls back to SQLite under `data/ingest/` for development.
+
+### Toast nightly sales exports (SFTP)
+
+Toast can deliver **ItemSelectionDetails.csv** per business day to SFTP after closeout (files kept ~7 days). Pantry pulls these into `data/ingest/inbox/toast-pos/` and logs each run in the database (`ingestion_runs` table).
+
+1. Ask Toast Customer Care to enable **automated nightly data exports** and register your SSH public key (Reports → Settings → SSH Keys / Data Exports).
+2. Copy `backend/.env.example` to `backend/.env` and set `TOAST_SFTP_*` variables.
+3. Pull yesterday or the last week:
+
+```bash
+cd backend
+uv sync
+uv run pantry-ingest toast-pull              # last 7 days ending yesterday
+uv run pantry-ingest toast-pull --date 2026-04-01
+uv run pantry-ingest toast-pull --days 3 --force
+```
+
+Cron example (daily at 6:00 after Toast closeout export):
+
+```cron
+0 6 * * * cd /path/to/Pantry/backend && /path/to/uv run pantry-ingest toast-pull --days 2
+```
+
+HTTP trigger (same logic): `POST /api/ingestion/toast/pull?days=7` — see `GET /api/ingestion/runs` for history.
 
 ## Exploratory Analysis
 
