@@ -8,19 +8,35 @@ Pantry is an inventory intelligence project for restaurants. This repository con
 
 ## Run locally (MVP UI)
 
-Full steps (Postgres, API, frontend, sample data, troubleshooting): **[backend/docs/RUNNING.md](backend/docs/RUNNING.md)**.
+**Full guide:** [backend/docs/RUNNING.md](backend/docs/RUNNING.md) · **Doc index:** [backend/docs/README.md](backend/docs/README.md) · **Data folders:** [data/toast/README.md](data/toast/README.md)
+
+### First-time setup (short)
 
 ```bash
-# Terminal 1 — API
-cd backend && cp .env.example .env   # set DATABASE_URL if using Postgres
-uv sync && uv run alembic upgrade head
-uv run uvicorn app:app --reload --port 8000
+# 1. Check exports are in place (optional)
+./scripts/verify-setup.sh perilla
 
-# Terminal 2 — UI (http://localhost:8080, proxies /api → :8000)
-cd frontend && npm install && npm run dev
+# 2. Postgres (Docker) — or use Homebrew; see backend/docs/DATABASE.md
+./scripts/start-postgres.sh
+
+# 3. Migrate + seed DB from files under data/toast/
+./scripts/bootstrap-db.sh perilla
+
+# 4. API + UI
+cd backend && uv run uvicorn app:app --reload --port 8000
+cd frontend && npm install && npm run dev   # http://localhost:8080
 ```
 
-Put xtraCHEF `*Item_Detail_Report*.csv` in `data/toast/xtraCHEF/` before expecting rows on **Inventory → Current Stock**.
+Put exports under `data/toast/…/perilla/` (xtraCHEF, `MenuItem_Export.csv`, `ItemSelectionDetails*.csv`). Details in [data/toast/README.md](data/toast/README.md).
+
+### CLI (`python -m pantry_engine.cli`)
+
+From `backend/` (after `uv sync`):
+
+| Command | Purpose |
+|---------|---------|
+| `uv run python -m pantry_engine.cli db-seed --location perilla` | Load files → Postgres |
+| `uv run python -m pantry_engine.cli toast-pull --date YYYY-MM-DD --apply` | Nightly Toast pull + depletion |
 
 ## Backend Engine
 
@@ -42,9 +58,9 @@ python3 -m unittest discover -s tests
 
 MVP schema: multi-location inventory, daily POS rollups, manual recipes, quick count, ingestion runs.
 
-- [Running locally](backend/docs/RUNNING.md) — start API + frontend, data paths, env, troubleshooting
+- [Running locally](backend/docs/RUNNING.md) — **start here**
 - [Database setup](backend/docs/DATABASE.md) — Postgres, migrations, tables
-- [Inventory & naming](backend/docs/INVENTORY.md) — xtraCHEF vs Toast, Ingredient vs Inventory Item, APIs
+- [Inventory & naming](backend/docs/INVENTORY.md) — data model and APIs
 
 ```bash
 # Postgres via Docker (requires Compose — not bundled with `brew install docker`)
@@ -73,15 +89,15 @@ Toast can deliver **ItemSelectionDetails.csv** per business day to SFTP after cl
 ```bash
 cd backend
 uv sync
-uv run pantry-ingest toast-pull              # last 7 days ending yesterday
-uv run pantry-ingest toast-pull --date 2026-04-01
-uv run pantry-ingest toast-pull --days 3 --force
+uv run python -m pantry_engine.cli toast-pull              # last 7 days ending yesterday
+uv run python -m pantry_engine.cli toast-pull --date 2026-04-01
+uv run python -m pantry_engine.cli toast-pull --days 3 --force
 ```
 
 Cron example (daily at 6:00 after Toast closeout export):
 
 ```cron
-0 6 * * * cd /path/to/Pantry/backend && /path/to/uv run pantry-ingest toast-pull --days 2
+0 6 * * * cd /path/to/Pantry/backend && /path/to/uv run python -m pantry_engine.cli toast-pull --days 2 --apply
 ```
 
 HTTP trigger (same logic): `POST /api/ingestion/toast/pull?days=7` — see `GET /api/ingestion/runs` for history.

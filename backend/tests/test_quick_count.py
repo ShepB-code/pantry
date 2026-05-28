@@ -1,5 +1,5 @@
 import unittest
-from datetime import date
+from unittest.mock import patch
 
 from pantry_engine.quick_count import (
     build_quick_count_items,
@@ -9,8 +9,27 @@ from pantry_engine.quick_count import (
 
 
 class QuickCountTest(unittest.TestCase):
-    def test_build_returns_bounded_list(self) -> None:
-        items = build_quick_count_items(max_items=8)
+    @patch("pantry_engine.quick_count.pantry_eda.read_pos_item_selections")
+    @patch("pantry_engine.quick_count.pantry_eda.read_xtrachef_item_library")
+    def test_build_returns_bounded_list(self, mock_xchef, mock_pos) -> None:
+        import pandas as pd
+
+        mock_xchef.return_value = pd.DataFrame(
+            [
+                {
+                    "item_key": "salmon",
+                    "item_description": "Salmon fillet",
+                    "category": "Food - Seafood",
+                    "category_group": "Seafood",
+                    "uom": "lb",
+                    "last_purchased_price": 10.0,
+                    "last_purchased_date": None,
+                    "product_s": "",
+                }
+            ]
+        )
+        mock_pos.return_value = pd.DataFrame()
+        items = build_quick_count_items(max_items=8, location_id="perilla")
         self.assertGreater(len(items), 0)
         self.assertLessEqual(len(items), 8)
         first = items[0]

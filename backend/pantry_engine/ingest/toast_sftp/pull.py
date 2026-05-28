@@ -138,7 +138,9 @@ def pull_item_selection(
 
     staging.replace(inbox_path)
     if copy_to_canonical:
-        canonical_dir = paths.toast_pos_canonical_dir(business_date.year)
+        canonical_dir = paths.toast_pos_canonical_dir(
+            business_date.year, store.location_id
+        )
         canonical_dir.mkdir(parents=True, exist_ok=True)
         canonical_path = canonical_dir / paths.canonical_filename(date_key)
         shutil.copy2(inbox_path, canonical_path)

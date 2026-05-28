@@ -9,7 +9,7 @@ from pantry_engine.db.models import LocationRecord
 
 
 def default_location_id() -> str:
-    return os.environ.get("PANTRY_DEFAULT_LOCATION_ID", "default").strip() or "default"
+    return os.environ.get("PANTRY_DEFAULT_LOCATION_ID", "perilla").strip() or "perilla"
 
 
 def default_location_name() -> str:

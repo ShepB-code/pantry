@@ -288,13 +288,14 @@ def build_quick_count_items(
     par_overrides: dict[str, float] | None = None,
     max_items: int = DEFAULT_MAX_ITEMS,
     today: date | None = None,
+    location_id: str | None = None,
 ) -> list[dict[str, Any]]:
     today = today or date.today()
     inventory = inventory or {}
     par_overrides = par_overrides or {}
 
-    xchef = pantry_eda.read_xtrachef_item_library()
-    pos = pantry_eda.read_pos_item_selections()
+    xchef = pantry_eda.read_xtrachef_item_library(location_id=location_id)
+    pos = pantry_eda.read_pos_item_selections(location_id=location_id)
 
     food = xchef[xchef.apply(_is_food_row, axis=1)].copy()
     food = _dedupe_food_items(food)

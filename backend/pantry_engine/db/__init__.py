@@ -10,7 +10,6 @@ from pantry_engine.db.models import (
     RecipeLineRecord,
 )
 from pantry_engine.db.seed import default_location_id, ensure_default_location
-from pantry_engine.ingest.runs import IngestionRun, IngestionRunStore, RunStatus
 from pantry_engine.db.session import (
     check_connection,
     get_engine,
@@ -29,9 +28,6 @@ __all__ = [
     "QuickCountSessionRecord",
     "QuickCountLineRecord",
     "IngestionRunRecord",
-    "IngestionRun",
-    "IngestionRunStore",
-    "RunStatus",
     "default_location_id",
     "ensure_default_location",
     "check_connection",

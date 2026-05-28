@@ -87,7 +87,6 @@ def upsert_xtrachef_catalog(
             updated += 1
             continue
 
-        default_par = _default_par(row, unit)
         label = _catalog_label(row)
         record = InventoryItemRecord(
             location_id=location_id,
@@ -105,9 +104,10 @@ def upsert_xtrachef_catalog(
                 else None
             ),
             last_purchased_date=_parse_purchased_date(row.get("last_purchased_date")),
-            on_hand=round(default_par * 0.85, 2),
+            # Start new items at zero; stock becomes accurate via quick count and receiving.
+            on_hand=0.0,
             par_level=None,
-            last_count_source="xtrachef_default",
+            last_count_source="uninitialized",
             catalog_updated_at=now,
             created_at=now,
             updated_at=now,
@@ -127,7 +127,7 @@ def sync_xtrachef_from_exports(session: Session, location_id: str) -> tuple[int,
         return upsert_xtrachef_catalog(
             session,
             location_id=location_id,
-            xchef=pantry_eda.read_xtrachef_item_library(),
+            xchef=pantry_eda.read_xtrachef_item_library(location_id=location_id),
         )
     except Exception:
         session.rollback()

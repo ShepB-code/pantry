@@ -1,163 +1,205 @@
 # Running Pantry locally
 
-End-to-end steps to run the MVP web app (inventory + quick count) against PostgreSQL or SQLite.
+End-to-end guide for the MVP web app (inventory + quick count).
 
-## Prerequisites
+## How it works (read this once)
 
-| Tool | Used for |
-|------|----------|
-| [uv](https://docs.astral.sh/uv/) | Python deps and CLI (`backend/`) |
-| Node 18+ and npm or Bun | React frontend (`frontend/`) |
-| PostgreSQL 16 (optional) | Recommended; see [DATABASE.md](./DATABASE.md) |
+| Layer | Role |
+|-------|------|
+| **Files** (`data/toast/…`) | Source exports (xtraCHEF, Toast). Used for **seeding** and notebooks. |
+| **Database** | Source of truth for the **API and UI** (`inventory_items`, `menu_items`, `pos_sales_daily`, …). |
+| **API** (`uvicorn app:app`) | Serves JSON to the React app. |
+| **CLI** (`python -m pantry_engine.cli`) | Ops jobs: seed DB from files, pull Toast SFTP, apply sales/depletion. |
 
-## 1. Sample data (xtraCHEF)
+Weather and advanced forecasting still use CSVs in some code paths; the **Inventory** UI is DB-backed.
 
-The API syncs inventory from the **latest** xtraCHEF Item Detail export:
+Folder layout: [data/toast/README.md](../../data/toast/README.md).
+
+---
+
+## First-time setup (checklist)
+
+### 0. Prerequisites
+
+| Tool | Notes |
+|------|--------|
+| [uv](https://docs.astral.sh/uv/) | Python deps + CLI |
+| Node 18+ | Frontend (`npm` or `bun`) |
+| PostgreSQL 16 | Recommended — [DATABASE.md](./DATABASE.md) (Docker or Homebrew) |
+
+### 1. Put exports on disk
+
+For location `perilla` (or set `PANTRY_DEFAULT_LOCATION_ID` in `.env`):
 
 ```text
-data/toast/xtraCHEF/*Item_Detail_Report*.csv
+data/toast/xtraCHEF/perilla/*Item_Detail_Report*.csv
+data/toast/pos/perilla/MenuItem_Export.csv          # optional but recommended
+data/toast/pos/perilla/ItemSelectionDetails*.csv  # daily or monthly POS exports
 ```
 
-If this folder is empty or missing, the API still starts but catalog sync prints  
-`xtraCHEF catalog sync skipped: ...` and **Current Stock** will be empty.
-
-Place a real export there, or copy from your restaurant’s xtraCHEF download path.
-
-Toast POS CSVs (`data/toast/pos/`, SFTP inbox) are optional for the inventory UI; they matter for ingestion, depletion, and quick-count scoring. See [README.md](../../README.md) (Toast SFTP section).
-
-## 2. Database
-
-### PostgreSQL (recommended)
-
-Pick one setup path in [DATABASE.md](./DATABASE.md) (Docker Compose or Homebrew).
+### 2. Configure backend
 
 ```bash
 cd backend
 cp .env.example .env
-# Edit DATABASE_URL — e.g. postgresql+psycopg://pantry:pantry@127.0.0.1:5432/pantry
-
+# Edit .env: DATABASE_URL, PANTRY_DEFAULT_LOCATION_ID=perilla
 uv sync
-uv run alembic upgrade head
 ```
 
-`alembic upgrade head` is required on Postgres when the schema changes (e.g. revision `002` for `catalog_name`).  
-API startup also calls `init_db()` (`create_all`) for dev convenience; **prefer Alembic** on shared databases.
+### 3. Start Postgres (if using it)
 
-Check connectivity:
+```bash
+# From repo root — Docker
+./scripts/start-postgres.sh
+
+# Or Homebrew — see DATABASE.md
+./scripts/setup-postgres-brew.sh
+```
+
+### 4. Migrate + seed the database
+
+**One command (from repo root):**
+
+```bash
+chmod +x scripts/bootstrap-db.sh   # first time only
+./scripts/bootstrap-db.sh perilla
+```
+
+**Or manually from `backend/`:**
+
+```bash
+uv run alembic upgrade head
+uv run python -m pantry_engine.cli db-seed --location perilla
+```
+
+`db-seed` will:
+
+- Upsert `MenuItem_Export.csv` → `menu_items` (if present)
+- Sync xtraCHEF → `inventory_items` (new rows start at `on_hand = 0`)
+- Ingest `ItemSelectionDetails*.csv` → `menu_items` + `pos_sales_daily`
+
+Verify DB:
 
 ```bash
 curl -s http://127.0.0.1:8000/api/health/db | python3 -m json.tool
+# (after API is running)
 ```
 
-### SQLite (no Postgres)
+### 5. Start API + UI
 
-Omit `DATABASE_URL` in `backend/.env`. Tables are created under:
+**Terminal 1 — API**
+
+```bash
+cd backend
+uv run uvicorn app:app --reload --port 8000
+```
+
+On startup the API will also try a light sync (menu export + xtraCHEF) if files are present.
+
+**Terminal 2 — UI**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open **http://localhost:8080** → **Inventory → Current Stock**.
+
+---
+
+## CLI reference (`python -m pantry_engine.cli`)
+
+Run from `backend/` (same as `uv run python -m pantry_engine.cli`):
+
+| Command | Purpose |
+|---------|---------|
+| `uv run python -m pantry_engine.cli db-seed --location perilla` | Bootstrap DB from `data/toast/` files |
+| `uv run python -m pantry_engine.cli db-seed --location perilla --skip-pos` | Catalog + menu only, no POS backfill |
+| `uv run python -m pantry_engine.cli toast-pull --date 2026-04-30 --apply` | Pull one day (SFTP or local sim) + ingest + depletion |
+
+Flags for `db-seed`: `--skip-xtrachef`, `--skip-menu-export`, `--skip-pos`, `--pos-file PATH` (repeatable).
+
+### Simulate Toast SFTP (local, no SSH)
+
+```bash
+./scripts/simulate-toast-sftp-drop.sh 2026-04-30 /path/to/ItemSelectionDetails.csv
+```
+
+Requires `TOAST_SFTP_LOCAL_ROOT` and `TOAST_SFTP_EXPORT_ID` in `.env` (see `.env.example`).
+
+### HTTP equivalents
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/health/db` | DB connectivity |
+| `GET /api/inventory` | Stock for UI |
+| `POST /api/inventory/sync-catalog` | Re-sync xtraCHEF |
+| `POST /api/menu/sync-export` | Re-sync `MenuItem_Export.csv` |
+| `POST /api/ingestion/toast/pull?days=7` | Toast pull (SFTP) |
+| `GET /api/ingestion/runs` | Ingestion history |
+
+More detail: [INVENTORY.md](./INVENTORY.md).
+
+---
+
+## SQLite (quick experiments)
+
+Omit `DATABASE_URL` in `.env`. Tables are created at:
 
 ```text
 data/ingest/ingestion_runs.db
 ```
 
-Fine for unit tests and quick experiments; production-style workflows should use Postgres.
+Use Postgres for anything resembling production.
 
-## 3. Start the API
-
-From repo root:
-
-```bash
-cd backend
-uv sync
-uv run uvicorn app:app --reload --port 8000
-```
-
-On startup the API will:
-
-1. Ensure default location exists (`PANTRY_DEFAULT_LOCATION_*` in `.env`).
-2. Run xtraCHEF catalog sync into `inventory_items` (if export file is present).
-3. Load legacy CSV/engine paths for recommendations (stub data may still apply).
-
-Force a catalog re-import without restart:
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/inventory/sync-catalog
-```
-
-Useful endpoints while developing:
-
-| URL | Purpose |
-|-----|---------|
-| `GET /api/health/db` | Database connection |
-| `GET /api/inventory` | Stock list for UI |
-| `GET /api/inventory/quick-count` | Quick count session |
-
-Domain docs: [INVENTORY.md](./INVENTORY.md), [DATABASE.md](./DATABASE.md).
-
-## 4. Start the frontend
-
-In a **second terminal**:
-
-```bash
-cd frontend
-npm install    # or: bun install
-npm run dev    # or: bun run dev
-```
-
-- App URL: **http://localhost:8080**
-- Vite proxies `/api` → `http://127.0.0.1:8000` (see `frontend/vite.config.ts`)
-
-Open **Inventory → Current Stock** to confirm rows load. **Expiring Soon** and **Full Count** tabs still use placeholder UI data.
-
-## 5. Run tests
-
-```bash
-cd backend
-uv run python -m unittest discover -s tests -q
-```
-
-## Optional: Toast nightly pull
-
-Requires `TOAST_SFTP_*` in `backend/.env` or local simulation — see root [README.md](../../README.md).
-
-```bash
-cd backend
-uv run pantry-ingest toast-pull --days 7
-```
-
-HTTP equivalent: `POST /api/ingestion/toast/pull?days=7`, history at `GET /api/ingestion/runs`.
-
-Applying POS data into `menu_items` / `pos_sales_daily` is a separate step from “run the UI”; see ingestion code under `pantry_engine/ingest/`.
+---
 
 ## Environment variables
 
 | Variable | Default | Notes |
 |----------|---------|--------|
 | `DATABASE_URL` | (unset → SQLite) | Postgres connection string |
-| `PANTRY_DEFAULT_LOCATION_ID` | `default` | Single-location MVP |
-| `PANTRY_DEFAULT_LOCATION_NAME` | `Default Location` | |
+| `PANTRY_DEFAULT_LOCATION_ID` | `perilla` | Folder slug + `locations.id` |
+| `PANTRY_DEFAULT_LOCATION_NAME` | `Perilla` | Display name |
 | `PANTRY_DEFAULT_TIMEZONE` | `America/Chicago` | |
-| `TOAST_SFTP_*` | — | Only for Toast pull |
+| `TOAST_SFTP_*` | — | Nightly Toast pull |
 | `TOAST_SFTP_LOCAL_ROOT` | — | Local folder instead of SFTP |
-| `PANTRY_REPO_ROOT` | auto | Override repo root for CLI |
+| `PANTRY_REPO_ROOT` | auto | If CLI run outside repo layout |
 
-Full template: `backend/.env.example`.
+Template: `backend/.env.example`.
+
+---
 
 ## Troubleshooting
 
-| Symptom | What to check |
-|---------|----------------|
-| Empty Current Stock | xtraCHEF CSV under `data/toast/xtraCHEF/`; API log for sync skipped; `POST /api/inventory/sync-catalog` |
-| UI “Could not load inventory” | API running on 8000; frontend dev server on 8080 |
+| Symptom | Fix |
+|---------|-----|
+| Empty Current Stock | xtraCHEF CSV under `data/toast/xtraCHEF/{location}/`; run `./scripts/bootstrap-db.sh` or `POST /api/inventory/sync-catalog` |
+| Wrong restaurant data | `PANTRY_DEFAULT_LOCATION_ID` in `.env` must match folder name |
+| UI cannot reach API | API on `:8000`, frontend on `:8080` (Vite proxies `/api`) |
 | `relation "inventory_items" does not exist` | `uv run alembic upgrade head` |
-| Column `catalog_name` missing | Migration `002`: `alembic upgrade head`, restart API |
-| `role "pantry" does not exist` | [DATABASE.md](./DATABASE.md) — Homebrew vs Docker URL mismatch |
-| Duplicate key on startup sync | Rare duplicate `item_key` in one export; fixed in catalog sync — pull latest code |
+| `role "pantry" does not exist` | [DATABASE.md](./DATABASE.md) — Docker vs Homebrew URL |
+| Depletion does nothing | Need `recipe_lines` linking menu item → inventory item |
 
-## Daily workflow (summary)
+---
+
+## Tests
+
+```bash
+cd backend
+uv run python -m unittest discover -s tests -q
+```
+
+---
+
+## Daily workflow
 
 ```text
-1. Postgres up (if used)
-2. uv run uvicorn app:app --reload --port 8000
-3. npm run dev  (frontend)
-4. Drop new xtraCHEF export → restart API or POST sync-catalog
-5. Optional: toast-pull for POS files
-6. Inventory UI: quick count, set par via API PATCH
+1. Postgres running
+2. Optional: toast-pull --apply for yesterday's sales
+3. uv run uvicorn app:app --reload --port 8000
+4. npm run dev (frontend)
+5. Quick count / par updates in UI
+6. New xtraCHEF export → POST sync-catalog or restart API
 ```

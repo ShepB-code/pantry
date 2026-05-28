@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from pantry_engine.data_paths import pos_dir, pos_year_dir
 from pantry_engine.root import repo_root
 
 
@@ -33,9 +34,16 @@ class IngestPaths:
     def toast_pos_failed(self) -> Path:
         return self.root / "failed" / "toast-pos"
 
-    def toast_pos_canonical_dir(self, year: int) -> Path:
-        """Where EDA and legacy loaders expect POS CSVs."""
-        return repo_root() / "data" / "toast" / "pos" / str(year)
+    def toast_pos_canonical_dir(self, year: int, location_id: str | None = None) -> Path:
+        """Restaurant POS archive: ``data/toast/pos/{location_id}/``.
+
+        ``year`` is kept for backward compatibility; if the new folder exists we use it,
+        otherwise we fall back to the legacy year-scoped folder.
+        """
+        new_root = pos_dir(location_id)
+        if new_root.is_dir():
+            return new_root
+        return pos_year_dir(year, location_id)
 
     def ensure_dirs(self) -> None:
         for path in (

@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
-set -e
+# Legacy helper — prefer backend/docs/RUNNING.md and scripts/bootstrap-db.sh
+#
+# Starts API + frontend only. Does NOT seed the database.
+# Run ./scripts/bootstrap-db.sh first on a new machine.
+#
+set -euo pipefail
 
-echo "Starting Pantry MVP..."
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+echo "Pantry MVP — starting API + UI (see backend/docs/RUNNING.md for full setup)"
+echo ""
 
-# Start backend
-echo "Starting backend API (FastAPI)..."
-cd backend
-
-# Install dependencies and activate .venv
-if [ ! -d "../.venv" ]; then
-  python3 -m venv ../.venv
+if [[ ! -f "$ROOT/backend/.env" ]]; then
+  echo "Warning: backend/.env missing. Copy backend/.env.example and run ./scripts/bootstrap-db.sh"
 fi
-source ../.venv/bin/activate
-python3 -m pip install fastapi uvicorn pandas python-multipart google-generativeai python-dotenv pillow > /dev/null 2>&1 || true
-python3 -m uvicorn app:app --host 127.0.0.1 --port 8000 --reload &
-BACKEND_PID=$!
-cd ..
 
-# Start frontend
-echo "Starting frontend UI (Vite)..."
-cd frontend
-npm install --no-audit --no-fund > /dev/null 2>&1 || true
+if ! command -v uv >/dev/null 2>&1; then
+  echo "uv is required. Install: https://docs.astral.sh/uv/" >&2
+  exit 1
+fi
+
+cd "$ROOT/backend"
+uv sync
+uv run uvicorn app:app --host 127.0.0.1 --port 8000 --reload &
+BACKEND_PID=$!
+
+cd "$ROOT/frontend"
+npm install --no-audit --no-fund
 npm run dev &
 FRONTEND_PID=$!
-cd ..
 
-echo "MVP is running!"
-echo "Backend: http://127.0.0.1:8000"
-echo "Frontend: Check Vite output for local URL (usually http://localhost:8080 or http://localhost:5173)"
-echo "Press Ctrl+C to stop both servers."
+echo ""
+echo "Backend:  http://127.0.0.1:8000"
+echo "Frontend: http://localhost:8080 (typical)"
+echo "Press Ctrl+C to stop."
 
-# Handle shutdown
-trap "echo 'Shutting down...'; kill $BACKEND_PID $FRONTEND_PID; exit" SIGINT SIGTERM
-
-# Wait for background processes
-wait $BACKEND_PID $FRONTEND_PID
+trap "kill $BACKEND_PID $FRONTEND_PID 2>/dev/null; exit" SIGINT SIGTERM
+wait

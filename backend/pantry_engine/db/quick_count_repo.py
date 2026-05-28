@@ -41,6 +41,7 @@ class QuickCountRepository:
             inventory=self._inventory.on_hand_map(),
             par_overrides=self._inventory.par_overrides_map(),
             today=session_date,
+            location_id=self.location_id,
         )
 
         for item in items:

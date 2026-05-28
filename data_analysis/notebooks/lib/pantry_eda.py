@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import zipfile
 from pathlib import Path
@@ -14,6 +15,38 @@ POS_ROOT = TOAST_ROOT / "pos"
 XTRACHEF_ROOT = TOAST_ROOT / "xtraCHEF"
 WEATHER_PATH = DATA_ROOT / "weather" / "chicago_2026_bulk.csv"
 POS_2026_ROOT = POS_ROOT / "2026"
+
+
+def _backend_default_location_id() -> str | None:
+    try:
+        from pantry_engine.db.seed import default_location_id
+
+        return default_location_id()
+    except ImportError:
+        return None
+
+
+def location_slug(location_id: str | None = None) -> str:
+    """Folder name under ``data/toast/{pos,xtraCHEF}/…`` (e.g. ``perilla``, ``noriko``)."""
+    if location_id:
+        return location_id.strip()
+    backend = _backend_default_location_id()
+    if backend:
+        return backend
+    return os.environ.get("PANTRY_DEFAULT_LOCATION_ID", "perilla").strip() or "perilla"
+
+
+def xtrachef_location_dir(location_id: str | None = None) -> Path:
+    return XTRACHEF_ROOT / location_slug(location_id)
+
+
+def pos_location_dir(year: int = 2026, location_id: str | None = None) -> Path:
+    # New layout: data/toast/pos/{location_id}/
+    new_root = POS_ROOT / location_slug(location_id)
+    if new_root.is_dir():
+        return new_root
+    # Legacy layout: data/toast/pos/{year}/{location_id}/
+    return POS_ROOT / str(year) / location_slug(location_id)
 
 
 def stable_key(value: object) -> str:
@@ -44,14 +77,48 @@ def latest_file(folder: Path, pattern: str) -> Path:
     return matches[-1]
 
 
-def read_pos_item_selections(path: Path | None = None, include_uncategorized: bool = False) -> pd.DataFrame:
-    if path is None and POS_2026_ROOT.exists():
-        return read_pos_item_selection_files(
-            sorted(POS_2026_ROOT.glob("ItemSelectionDetails*.csv")),
-            include_uncategorized=include_uncategorized,
-        )
+def read_pos_item_selections(
+    path: Path | None = None,
+    include_uncategorized: bool = False,
+    *,
+    location_id: str | None = None,
+    year: int = 2026,
+) -> pd.DataFrame:
+    if path is None:
+        loc_root = pos_location_dir(year, location_id)
+        if loc_root.is_dir():
+            files = sorted(loc_root.glob("ItemSelectionDetails*.csv"))
+            if files:
+                return read_pos_item_selection_files(
+                    files, include_uncategorized=include_uncategorized
+                )
+        # Pre-reorg layout: CSVs directly under pos/2026/
+        if POS_2026_ROOT.is_dir():
+            legacy = sorted(POS_2026_ROOT.glob("ItemSelectionDetails*.csv"))
+            if legacy:
+                return read_pos_item_selection_files(
+                    legacy, include_uncategorized=include_uncategorized
+                )
     path = path or latest_file(POS_ROOT, "ItemSelectionDetails*.csv")
     return read_pos_item_selection_files([path], include_uncategorized=include_uncategorized)
+
+
+def read_toast_menu_item_export(
+    path: Path | None = None, *, location_id: str | None = None, year: int = 2026
+) -> pd.DataFrame:
+    """Read Toast MenuItem_Export.csv (menu item database).
+
+    Expected columns include: Item ID, Name, Archived, Modifier, SKU, PLU.
+    """
+    path = path or (pos_location_dir(year, location_id) / "MenuItem_Export.csv")
+    df = read_csv_with_fallback(path)
+    df.columns = [clean_column(column) for column in df.columns]
+    # Normalize the important identifiers.
+    if "item_id" in df.columns:
+        df["item_id"] = df["item_id"].astype(str)
+    if "name" in df.columns:
+        df["name"] = df["name"].astype(str)
+    return df
 
 
 def read_pos_item_selection_files(
@@ -222,8 +289,12 @@ def read_weather_daily(path: Path | None = None, year: int | None = None, month:
     return add_standard_weather_units(weather)
 
 
-def read_xtrachef_item_library(path: Path | None = None) -> pd.DataFrame:
-    path = path or latest_file(XTRACHEF_ROOT, "*Item_Detail_Report*.csv")
+def read_xtrachef_item_library(
+    path: Path | None = None, *, location_id: str | None = None
+) -> pd.DataFrame:
+    path = path or latest_file(
+        xtrachef_location_dir(location_id), "*Item_Detail_Report*.csv"
+    )
     header_row = find_csv_header_row(path, "Location Name")
     df = pd.read_csv(path, skiprows=header_row)
     df.columns = [clean_column(column) for column in df.columns]
@@ -236,8 +307,8 @@ def read_xtrachef_item_library(path: Path | None = None) -> pd.DataFrame:
     return df
 
 
-def extract_recipe_pdf_text(path: Path | None = None) -> str:
-    path = path or latest_file(XTRACHEF_ROOT, "*Recipe_Download*.pdf")
+def extract_recipe_pdf_text(path: Path | None = None, *, location_id: str | None = None) -> str:
+    path = path or latest_file(xtrachef_location_dir(location_id), "*Recipe_Download*.pdf")
     try:
         from pypdf import PdfReader
     except ImportError as error:

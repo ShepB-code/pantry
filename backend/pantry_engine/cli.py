@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import sys
 from datetime import date, timedelta
+from pathlib import Path
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,10 +43,43 @@ def main(argv: list[str] | None = None) -> int:
         help="After pull, ingest sales into DB and apply recipe depletion to on_hand",
     )
 
+    seed = sub.add_parser(
+        "db-seed",
+        help="Seed the database from files under data/toast/",
+    )
+    seed.add_argument(
+        "--location",
+        default=None,
+        help="Location id / folder slug (default: PANTRY_DEFAULT_LOCATION_ID)",
+    )
+    seed.add_argument(
+        "--pos-file",
+        action="append",
+        default=[],
+        help="Path to an ItemSelectionDetails CSV to ingest (repeatable).",
+    )
+    seed.add_argument(
+        "--skip-xtrachef",
+        action="store_true",
+        help="Skip xtraCHEF inventory sync",
+    )
+    seed.add_argument(
+        "--skip-menu-export",
+        action="store_true",
+        help="Skip Toast MenuItem_Export.csv sync",
+    )
+    seed.add_argument(
+        "--skip-pos",
+        action="store_true",
+        help="Skip ItemSelectionDetails*.csv backfill",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "toast-pull":
         return _cmd_toast_pull(args)
+    if args.command == "db-seed":
+        return _cmd_db_seed(args)
     return 1
 
 
@@ -110,6 +144,74 @@ def _cmd_toast_pull(args: argparse.Namespace) -> int:
             print(f"{label}: FAIL — {result.message}", file=sys.stderr)
             exit_code = 1
     return exit_code
+
+
+def _cmd_db_seed(args: argparse.Namespace) -> int:
+    # pantry_eda lives in data_analysis/notebooks/lib (repo root)
+    from pantry_engine.root import repo_root
+
+    lib_path = repo_root() / "data_analysis" / "notebooks" / "lib"
+    if str(lib_path) not in sys.path:
+        sys.path.append(str(lib_path))
+
+    import pantry_eda
+
+    from pantry_engine.db.catalog_sync import sync_xtrachef_from_exports
+    from pantry_engine.db.pos_sales_sync import (
+        ingest_item_selection_file_all_dates,
+        ingest_menu_item_export_file,
+    )
+    from pantry_engine.db.seed import ensure_default_location
+    from pantry_engine.db.session import get_session_factory, init_db
+
+    init_db()
+    location_id = args.location
+
+    with get_session_factory()() as session:
+        loc_id = ensure_default_location(session, location_id=location_id)
+
+        if not args.skip_menu_export:
+            menu_export = pantry_eda.pos_location_dir(location_id=loc_id) / "MenuItem_Export.csv"
+            if menu_export.exists():
+                out = ingest_menu_item_export_file(
+                    session, csv_path=menu_export, location_id=loc_id
+                )
+                print(f"menu export: {out.get('menuItemsUpserted', 0)} upserted")
+            else:
+                print(f"menu export: skipped (missing {menu_export})")
+
+        if not args.skip_xtrachef:
+            try:
+                created, updated = sync_xtrachef_from_exports(session, loc_id)
+                print(f"xtrachef: {created} created, {updated} updated")
+            except Exception as exc:
+                session.rollback()
+                print(f"xtrachef: skipped ({exc})")
+
+        if args.skip_pos:
+            print("pos: skipped (--skip-pos)")
+            return 0
+
+        # POS backfill from explicit files, else ingest any ItemSelectionDetails*.csv in the location folder.
+        pos_files = [Path(p).expanduser() for p in args.pos_file]
+        if not pos_files:
+            loc_root = pantry_eda.pos_location_dir(location_id=loc_id)
+            pos_files = sorted(loc_root.glob("ItemSelectionDetails*.csv"))
+
+        if not pos_files:
+            print("pos: skipped (no ItemSelectionDetails*.csv files found)")
+            return 0
+
+        total_days = 0
+        for path in pos_files:
+            out = ingest_item_selection_file_all_dates(
+                session, csv_path=path, location_id=loc_id
+            )
+            total_days += int(out.get("days") or 0)
+            print(f"pos: {path.name} — {out.get('days', 0)} day(s), {out.get('salesLines', 0)} lines")
+        print(f"pos: total days ingested: {total_days}")
+
+    return 0
 
 
 def _parse_date(value: str) -> date:

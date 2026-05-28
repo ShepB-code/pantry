@@ -6,8 +6,9 @@ This document describes how Pantry represents stock, where names come from, and 
 
 | Source | Export / API | Lands in | Used for |
 |--------|----------------|----------|----------|
-| **xtraCHEF** | `*Item_Detail_Report*.csv` under `data/toast/xtraCHEF/` | `inventory_items` | Catalog, default on-hand seed, vendor metadata |
-| **Toast POS** | `ItemSelectionDetails.csv` (SFTP or local inbox) | `menu_items`, `pos_sales_daily` | Sales rollups; depletion when `recipe_lines` exist |
+| **xtraCHEF** | `data/toast/xtraCHEF/{location_id}/*Item_Detail_Report*.csv` | `inventory_items` | Catalog, default on-hand seed, vendor metadata |
+| **Toast POS** | `data/toast/pos/{location_id}/ItemSelectionDetails*.csv` (or SFTP inbox) | `menu_items`, `pos_sales_daily` | Sales rollups; depletion when `recipe_lines` exist |
+| **Toast menu items** | `data/toast/pos/{location_id}/MenuItem_Export.csv` | `menu_items` | Stable Toast Item ID → name database |
 | **Quick count** | `POST /api/inventory/quick-count/lines` | `quick_count_*`, `inventory_items.on_hand` | Physical counts override estimates |
 | **Par (manual)** | `PATCH /api/inventory/{id}/par` | `inventory_items.par_level` | Target stock; not overwritten by catalog sync |
 
@@ -61,7 +62,7 @@ POST /api/inventory/sync-catalog
 - **Creates** new food rows from the latest xtraCHEF export.
 - **Updates** catalog fields (`name`, `catalog_name`, category, unit, vendor, prices, `catalog_updated_at`).
 - **Does not overwrite** existing `on_hand` or `par_level` (counts and par edits are preserved).
-- New rows get a default `on_hand` from quick-count heuristics (`xtrachef_default`); real counts should come from quick count.
+- New rows start at `on_hand = 0` (`last_count_source = uninitialized`). Real counts should come from quick count and receiving (invoices).
 
 Food filter: rows must look like food categories (`_is_food_row`); supplies/disposables are excluded.
 

@@ -52,8 +52,11 @@ app.add_middleware(
 
 
 def load_data() -> tuple[PantryEngine, InMemoryDataSource]:
-    print("Loading POS data...")
-    pos_df = pantry_eda.read_pos_item_selections()
+    from pantry_engine.db.seed import default_location_id
+
+    location_id = default_location_id()
+    print(f"Loading POS data for location {location_id}...")
+    pos_df = pantry_eda.read_pos_item_selections(location_id=location_id)
     print("Loading Weather data...")
     weather_df = pantry_eda.read_weather_daily()
 
@@ -177,16 +180,26 @@ class ParLevelUpdate(BaseModel):
 def startup_event():
     from pantry_engine.db import init_db
     from pantry_engine.db.catalog_sync import sync_xtrachef_from_exports
+    from pantry_engine.db.pos_sales_sync import ingest_menu_item_export_file
     from pantry_engine.db.seed import default_location_id, ensure_default_location
     from pantry_engine.db.session import get_session_factory
 
     init_db()
     with get_session_factory()() as session:
-        ensure_default_location(session)
+        loc_id = ensure_default_location(session)
         try:
-            created, updated = sync_xtrachef_from_exports(
-                session, default_location_id()
-            )
+            menu_export = pantry_eda.pos_location_dir(location_id=loc_id) / "MenuItem_Export.csv"
+            if menu_export.exists():
+                result = ingest_menu_item_export_file(
+                    session, csv_path=menu_export, location_id=loc_id
+                )
+                print(f"Toast menu export sync: {result.get('menuItemsUpserted', 0)} upserted")
+        except Exception as exc:
+            session.rollback()
+            print(f"Toast menu export sync skipped: {exc}")
+
+        try:
+            created, updated = sync_xtrachef_from_exports(session, loc_id)
             print(f"xtraCHEF catalog sync: {created} created, {updated} updated")
         except Exception as exc:
             session.rollback()
@@ -223,6 +236,24 @@ def sync_catalog():
     with get_session_factory()() as session:
         created, updated = sync_xtrachef_from_exports(session, default_location_id())
     return {"created": created, "updated": updated}
+
+
+@app.post("/api/menu/sync-export")
+def sync_menu_export():
+    """Import Toast MenuItem_Export.csv into menu_items for the default location."""
+    from pantry_engine.db.pos_sales_sync import ingest_menu_item_export_file
+    from pantry_engine.db.seed import default_location_id
+    from pantry_engine.db.session import get_session_factory
+
+    loc_id = default_location_id()
+    menu_export = pantry_eda.pos_location_dir(location_id=loc_id) / "MenuItem_Export.csv"
+    if not menu_export.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"MenuItem_Export.csv not found at {menu_export}",
+        )
+    with get_session_factory()() as session:
+        return ingest_menu_item_export_file(session, csv_path=menu_export, location_id=loc_id)
 
 
 @app.patch("/api/inventory/{item_id}/par")
