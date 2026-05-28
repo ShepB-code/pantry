@@ -1,0 +1,237 @@
+Order #,Sent Date,Menu Item,Menu Group,Menu,Sales Category,Net Price,Qty,Void?
+1,4/30/26 5:00 PM,Vegetable Dumplings,STARTERS,PERILLA TO-GO,Food,14.00,1.0,false
+1,4/30/26 5:00 PM,Pork Dumplings,STARTERS,PERILLA TO-GO,Food,14.00,1.0,false
+1,4/30/26 5:00 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,26.00,1.0,false
+1,4/30/26 5:00 PM,Ssam & Dipping Sauces,BANCHAN,PERILLA TO-GO,Food,5.00,1.0,false
+1,4/30/26 5:00 PM,Scallion Muchim,BANCHAN,PERILLA TO-GO,Food,6.00,1.0,false
+1,4/30/26 5:00 PM,Kimchi Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+2,4/30/26 5:05 PM,Kimchi Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+2,4/30/26 5:05 PM,Kimchi Fried Rice,PLATES & BOWLS,PERILLA TO-GO,Food,20.00,1.0,false
+2,4/30/26 5:05 PM,Bulgogi,MAINS,PERILLA TO-GO,Food,32.00,1.0,false
+3,4/30/26 5:14 PM,Pork Dumplings,STARTERS,PERILLA TO-GO,Food,14.00,1.0,false
+3,4/30/26 5:14 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,24.00,1.0,false
+4,4/30/26 5:15 PM,Korean Fried Chicken Wings,STARTERS,PERILLA TO-GO,Food,22.00,1.0,false
+4,4/30/26 5:15 PM,FEAST for 2,DINNER SETS,PERILLA TO-GO,Food,60.00,1.0,false
+5,4/30/26 5:22 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,22.00,1.0,false
+6,4/30/26 5:24 PM,Old Friend,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+6,4/30/26 5:24 PM,Broth,Course 1,FOOD,Food,0.00,1.0,false
+6,4/30/26 5:24 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+6,4/30/26 5:24 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,2.0,false
+6,4/30/26 5:29 PM,House Red Wine,BEVERAGE,HAPPY HOUR,,12.00,1.0,false
+7,4/30/26 5:37 PM,Grilled LA Galbi,MAINS,PERILLA TO-GO,Food,32.00,1.0,false
+7,4/30/26 5:37 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,24.00,1.0,false
+8,4/30/26 5:38 PM,Soondubu Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+8,4/30/26 5:38 PM,Scallion Pancake,STARTERS,PERILLA TO-GO,Food,16.00,1.0,false
+6,4/30/26 5:38 PM,USDA Prime Short Rib,For the Grill,FOOD,Food,26.00,1.0,false
+6,4/30/26 5:38 PM,HH Scallion Pancake,FOOD,HAPPY HOUR,,8.00,1.0,false
+6,4/30/26 5:38 PM,HH Kimchi Arancini,FOOD,HAPPY HOUR,,5.00,1.0,false
+6,4/30/26 5:38 PM,HH Blistered Shishito Peppers,FOOD,HAPPY HOUR,,6.00,1.0,false
+6,4/30/26 5:38 PM,HH Jjajangmyeon,FOOD,HAPPY HOUR,,10.00,1.0,false
+6,4/30/26 5:38 PM,Rice,Banchan/Accompaniments,FOOD,Food,0.00,2.0,false
+9,4/30/26 5:45 PM,Broth,Course 1,FOOD,Food,0.00,3.0,false
+9,4/30/26 5:45 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+9,4/30/26 5:45 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,5.0,false
+10,4/30/26 5:48 PM,Soondubu Jigae,STEWS,PERILLA TO-GO,Food,20.50,1.0,false
+10,4/30/26 5:48 PM,Fire Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+10,4/30/26 5:48 PM,Diet Coke,DRINKS,PERILLA TO-GO,NA Beverage,2.50,1.0,false
+10,4/30/26 5:48 PM,Coca-Cola,DRINKS,PERILLA TO-GO,NA Beverage,2.50,1.0,false
+10,4/30/26 5:48 PM,Tteokbokki,RICE CAKES & NOODLES,PERILLA TO-GO,Food,10.00,1.0,false
+11,4/30/26 5:53 PM,Vegetable Dumplings,STARTERS,PERILLA TO-GO,Food,14.00,1.0,false
+11,4/30/26 5:53 PM,Garlic Chicken,MAINS,PERILLA TO-GO,Food,29.00,1.0,false
+11,4/30/26 5:53 PM,Garlic Rice,SIDES,PERILLA TO-GO,Food,11.00,1.0,false
+9,4/30/26 5:53 PM,Terra Korean Lager,BEER,BEVERAGE,Beer,45.00,5.0,false
+9,4/30/26 5:53 PM,Yangchon Chungju,SOJU & MAKGEOLLI,BEVERAGE,Liquor,72.00,1.0,false
+12,4/30/26 5:55 PM,Scallion Muchim,BANCHAN,PERILLA TO-GO,Food,6.00,1.0,false
+12,4/30/26 5:55 PM,Garlic Rice,SIDES,PERILLA TO-GO,Food,11.00,1.0,false
+12,4/30/26 5:55 PM,Kimchi Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+12,4/30/26 5:55 PM,Garlic Chicken,MAINS,PERILLA TO-GO,Food,21.00,1.0,false
+12,4/30/26 5:55 PM,Banchan Set,BANCHAN,PERILLA TO-GO,Food,8.00,1.0,false
+6,4/30/26 5:54 PM,House Red Wine,BEVERAGE,HAPPY HOUR,,12.00,1.0,false
+13,4/30/26 5:55 PM,Bibimbop,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+13,4/30/26 5:55 PM,Soondubu Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+14,4/30/26 5:58 PM,Milkis,DRINKS,PERILLA TO-GO,NA Beverage,3.00,1.0,false
+14,4/30/26 5:58 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,28.00,1.0,false
+16,4/30/26 6:05 PM,Broth,Course 1,FOOD,Food,0.00,3.0,false
+16,4/30/26 6:05 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+16,4/30/26 6:05 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,3.0,false
+17,4/30/26 6:07 PM,Sir Chicken Spicy Fries,SIR CHICKEN TO-GO,SIR CHICKEN TO-GO,Sir Chicken,6.00,1.0,false
+17,4/30/26 6:07 PM,Side: Perilla Ranch,SIDES,PERILLA TO-GO,Food,1.00,1.0,false
+17,4/30/26 6:07 PM,Fire Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,20.00,1.0,false
+18,4/30/26 6:11 PM,Fire Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+9,4/30/26 6:10 PM,Ssam,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+9,4/30/26 6:10 PM,Pa-Muchim,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+9,4/30/26 6:10 PM,Dweji Board,For the Grill,FOOD,Food,90.00,2.0,false
+9,4/30/26 6:10 PM,Classic Tasting Plate,For the Grill,FOOD,Food,45.00,1.0,false
+9,4/30/26 6:10 PM,Chef's Tasting Plate,For the Grill,FOOD,Food,150.00,2.0,false
+9,4/30/26 6:10 PM,Miyazaki A5 Wagyu,For the Grill,FOOD,Food,30.00,1.0,false
+9,4/30/26 6:10 PM,Scallion Pancake,For the Table,FOOD,Food,16.00,1.0,false
+9,4/30/26 6:10 PM,Rice Cake Royale,For the Table,FOOD,Food,23.00,1.0,false
+9,4/30/26 6:10 PM,Korean Fried Chicken,For the Table,FOOD,Food,22.00,1.0,false
+9,4/30/26 6:10 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,16.00,1.0,false
+9,4/30/26 6:10 PM,Golden Barley 17 Soju,SOJU & MAKGEOLLI,BEVERAGE,Liquor,66.00,1.0,false
+19,4/30/26 6:12 PM,Broth,Course 1,FOOD,Food,0.00,4.0,false
+19,4/30/26 6:12 PM,Banchan Set,Course 1,FOOD,Food,0.00,2.0,false
+19,4/30/26 6:12 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,5.0,false
+19,4/30/26 6:12 PM,G-Chateau Les Vieilles Pierres,BY THE GLASS,BEVERAGE,Wine,32.00,2.0,false
+16,4/30/26 6:14 PM,Chef's Tasting Plate,For the Grill,FOOD,Food,75.00,1.0,false
+16,4/30/26 6:14 PM,A5 Waygu Chobap,For the Table,FOOD,Food,48.00,3.0,false
+16,4/30/26 6:14 PM,Gochujang Riblets,For the Table,FOOD,Food,24.00,1.0,false
+16,4/30/26 6:14 PM,1/2 Scallion Pancake,For the Table,FOOD,Food,10.00,1.0,false
+16,4/30/26 6:14 PM,1/2 Korean Fried Chicken,For the Table,FOOD,Food,13.00,1.0,false
+16,4/30/26 6:14 PM,HH Jjajangmyeon,FOOD,HAPPY HOUR,,10.00,1.0,false
+16,4/30/26 6:14 PM,1/2 Kimchi Fried Rice,Stews/Rice,FOOD,Food,10.00,1.0,false
+21,4/30/26 6:17 PM,Tteokbokki,RICE CAKES & NOODLES,PERILLA TO-GO,Food,10.00,1.0,false
+21,4/30/26 6:17 PM,3pc Chicken Tenders,SIR CHICKEN TO-GO,SIR CHICKEN TO-GO,Sir Chicken,11.00,1.0,false
+21,4/30/26 6:17 PM,Sac Sac Grape,DRINKS,PERILLA TO-GO,NA Beverage,3.00,1.0,false
+21,4/30/26 6:17 PM,4oz of Kimchi,BANCHAN,PERILLA TO-GO,Food,3.00,1.0,false
+21,4/30/26 6:17 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,24.00,1.0,false
+21,4/30/26 6:17 PM,Scallion Pancake,STARTERS,PERILLA TO-GO,Food,16.00,1.0,false
+16,4/30/26 6:18 PM,Old Friend,COCKTAILS,BEVERAGE,Liquor,32.00,2.0,false
+16,4/30/26 6:18 PM,Yuja Sour,COCKTAILS,BEVERAGE,NA Beverage,12.00,1.0,false
+19,4/30/26 6:20 PM,G-Elizabeth Rose Chardonnay,BY THE GLASS,BEVERAGE,Wine,14.00,1.0,false
+22,4/30/26 6:24 PM,3pc Tender Combo,SIR CHICKEN TO-GO,SIR CHICKEN TO-GO,Sir Chicken,14.00,1.0,false
+23,4/30/26 6:29 PM,Side: Soy Vinaigrette,SIDES,PERILLA TO-GO,Food,1.00,1.0,false
+23,4/30/26 6:29 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,22.00,1.0,false
+6,4/30/26 6:29 PM,Fresh Start,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+9,4/30/26 6:31 PM,Golden Barley 17 Soju,SOJU & MAKGEOLLI,BEVERAGE,Liquor,66.00,1.0,false
+9,4/30/26 6:31 PM,Terra Korean Lager,BEER,BEVERAGE,Beer,45.00,5.0,false
+24,4/30/26 6:34 PM,Tteokbokki,RICE CAKES & NOODLES,PERILLA TO-GO,Food,10.00,1.0,false
+24,4/30/26 6:34 PM,Fire Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+6,4/30/26 6:34 PM,Smoke & Spice,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+25,4/30/26 6:36 PM,Broth,Course 1,FOOD,Food,0.00,4.0,false
+25,4/30/26 6:36 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+25,4/30/26 6:36 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,4.0,false
+26,4/30/26 6:38 PM,Kimchi Fried Rice,PLATES & BOWLS,PERILLA TO-GO,Food,23.00,1.0,false
+26,4/30/26 6:38 PM,Jjajangmyeon,RICE CAKES & NOODLES,PERILLA TO-GO,Food,15.00,1.0,false
+25,4/30/26 6:37 PM,Sparkling Greet,BY THE GLASS,BEVERAGE,Wine,0.00,2.0,false
+25,4/30/26 6:37 PM,Sparkling Greet,BY THE GLASS,BEVERAGE,Wine,0.00,2.0,false
+16,4/30/26 6:38 PM,Set Refill,Banchan/Accompaniments,FOOD,Food,0.00,1.0,false
+27,4/30/26 6:39 PM,Broth,Course 1,FOOD,Food,0.00,3.0,false
+27,4/30/26 6:39 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+27,4/30/26 6:39 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,3.0,false
+28,4/30/26 6:43 PM,Broth,Course 1,FOOD,Food,0.00,3.0,false
+28,4/30/26 6:43 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+28,4/30/26 6:43 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,3.0,false
+28,4/30/26 6:43 PM,Sparkling Greet,BY THE GLASS,BEVERAGE,Wine,0.00,3.0,false
+19,4/30/26 6:44 PM,Classic Tasting Plate,For the Grill,FOOD,Food,180.00,4.0,false
+19,4/30/26 6:44 PM,American F1 Bavette,For the Grill,FOOD,Food,36.00,1.0,false
+19,4/30/26 6:44 PM,Heritage Pork Belly,For the Grill,FOOD,Food,20.00,1.0,false
+19,4/30/26 6:44 PM,Four Star Mushrooms,For the Grill,FOOD,Food,24.00,1.0,false
+19,4/30/26 6:44 PM,Gochujang Riblets,For the Table,FOOD,Food,24.00,1.0,false
+19,4/30/26 6:44 PM,Scallion Pancake,For the Table,FOOD,Food,16.00,1.0,false
+19,4/30/26 6:44 PM,Blistered Shishito Peppers,For the Table,FOOD,Food,10.00,1.0,false
+19,4/30/26 6:44 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,16.00,1.0,false
+19,4/30/26 6:45 PM,G-Chateau Les Vieilles Pierres,BY THE GLASS,BEVERAGE,Wine,32.00,2.0,false
+29,4/30/26 6:50 PM,Diet Coke,SIR CHICKEN TO-GO,SIR CHICKEN TO-GO,NA Beverage,2.50,1.0,false
+29,4/30/26 6:50 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,25.00,1.0,false
+27,4/30/26 6:50 PM,Mishima Wagyu Hanger,For the Grill,FOOD,Food,36.00,1.0,false
+27,4/30/26 6:50 PM,American F1 Bavette,For the Grill,FOOD,Food,36.00,1.0,false
+27,4/30/26 6:50 PM,Heritage Pork Belly,For the Grill,FOOD,Food,20.00,1.0,false
+27,4/30/26 6:50 PM,Marinated Short Rib,For the Grill,FOOD,Food,28.00,1.0,false
+27,4/30/26 6:50 PM,Pa-Muchim,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+27,4/30/26 6:50 PM,Ssam,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+27,4/30/26 6:50 PM,Rice Cake Royale,For the Table,FOOD,Food,48.00,1.0,false
+27,4/30/26 6:50 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,16.00,1.0,false
+25,4/30/26 6:52 PM,Ssam,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+25,4/30/26 6:52 PM,Pa-Muchim,Banchan/Accompaniments,FOOD,Food,5.00,1.0,false
+25,4/30/26 6:52 PM,Chef's Tasting Plate,For the Grill,FOOD,Food,150.00,2.0,false
+25,4/30/26 6:52 PM,LA Galbi,For the Grill,FOOD,Food,32.00,1.0,false
+25,4/30/26 6:52 PM,Scallion Pancake,For the Table,FOOD,Food,16.00,1.0,false
+25,4/30/26 6:52 PM,Korean Fried Chicken,For the Table,FOOD,Food,22.00,1.0,false
+25,4/30/26 6:52 PM,Dwenjang Potatoes,For the Table,FOOD,Food,15.00,1.0,false
+25,4/30/26 6:52 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,16.00,1.0,false
+30,4/30/26 6:56 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,25.00,1.0,false
+16,4/30/26 6:57 PM,Blistered Shishito Peppers,For the Table,FOOD,Food,10.00,1.0,false
+31,4/30/26 6:59 PM,Bulgogi,MAINS,PERILLA TO-GO,Food,70.00,2.0,false
+31,4/30/26 6:59 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,24.00,1.0,false
+31,4/30/26 6:59 PM,Grilled LA Galbi,MAINS,PERILLA TO-GO,Food,34.50,1.0,false
+28,4/30/26 7:01 PM,Old Friend,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+28,4/30/26 7:01 PM,Terra Korean Lager,BEER,BEVERAGE,Beer,9.00,1.0,false
+28,4/30/26 7:01 PM,G-Golden Barley 17,BY THE GLASS,BEVERAGE,Liquor,14.00,1.0,false
+28,4/30/26 7:01 PM,Dweji Board,For the Grill,FOOD,Food,45.00,1.0,false
+28,4/30/26 7:01 PM,Classic Tasting Plate,For the Grill,FOOD,Food,45.00,1.0,false
+28,4/30/26 7:01 PM,Korean Fried Chicken,For the Table,FOOD,Food,22.00,1.0,false
+28,4/30/26 7:01 PM,Rice Cake Royale,For the Table,FOOD,Food,23.00,1.0,false
+28,4/30/26 7:01 PM,Kimchi Fried Rice,Stews/Rice,FOOD,Food,16.00,1.0,false
+19,4/30/26 7:02 PM,G-Chateau Les Vieilles Pierres,BY THE GLASS,BEVERAGE,Wine,16.00,1.0,false
+32,4/30/26 7:03 PM,Bibimbop,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+32,4/30/26 7:03 PM,Classic Fries,SIR CHICKEN TO-GO,SIR CHICKEN TO-GO,Sir Chicken,5.00,1.0,false
+28,4/30/26 7:03 PM,G-Dog Point Sauvignon Blanc,BY THE GLASS,BEVERAGE,Wine,15.00,1.0,false
+33,4/30/26 7:05 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,26.00,1.0,false
+33,4/30/26 7:05 PM,Diet Coke,DRINKS,PERILLA TO-GO,NA Beverage,2.50,1.0,false
+9,4/30/26 7:07 PM,Golden Barley 17 Soju,SOJU & MAKGEOLLI,BEVERAGE,Liquor,66.00,1.0,false
+19,4/30/26 7:15 PM,G-Elizabeth Rose Chardonnay,BY THE GLASS,BEVERAGE,Wine,14.00,1.0,false
+9,4/30/26 7:17 PM,(5360) Chateau Grand Soussans '20,WINES BY THE BOTTLE,BEVERAGE,Wine,120.00,1.0,false
+34,4/30/26 7:19 PM,Soondubu Jigae,STEWS,PERILLA TO-GO,Food,18.00,1.0,false
+19,4/30/26 7:19 PM,Unusual Suspect,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+36,4/30/26 7:27 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,27.00,1.0,false
+36,4/30/26 7:27 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,25.00,1.0,false
+36,4/30/26 7:27 PM,Tteokbokki,RICE CAKES & NOODLES,PERILLA TO-GO,Food,10.00,1.0,false
+35,4/30/26 7:27 PM,Garlic Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,19.00,1.0,false
+19,4/30/26 7:29 PM,Unusual Suspect,COCKTAILS,BEVERAGE,Liquor,32.00,2.0,false
+37,4/30/26 7:29 PM,Baek Negroni,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+38,4/30/26 7:32 PM,1L Mtn Sparkling,NA BEVERAGES,BEVERAGE,NA Beverage,10.00,1.0,false
+38,4/30/26 7:40 PM,Broth,Course 1,FOOD,Food,0.00,2.0,false
+38,4/30/26 7:40 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+38,4/30/26 7:40 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,2.0,false
+39,4/30/26 7:51 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,32.00,1.0,false
+28,4/30/26 7:48 PM,G-Dog Point Sauvignon Blanc,BY THE GLASS,BEVERAGE,Wine,15.00,1.0,false
+19,4/30/26 7:48 PM,Jinro Shot,BY THE GLASS,BEVERAGE,Liquor,6.00,1.0,false
+37,4/30/26 7:53 PM,Smoke & Spice,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+37,4/30/26 7:53 PM,Golden Hour,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+19,4/30/26 7:58 PM,Fortaleza Anjeo,SPIRITS,BEVERAGE,Liquor,32.00,1.0,false
+19,4/30/26 7:58 PM,La Luna Mezcal,SPIRITS,BEVERAGE,Liquor,24.00,1.0,false
+38,4/30/26 7:59 PM,Chef's Tasting Plate,For the Grill,FOOD,Food,75.00,1.0,false
+38,4/30/26 7:59 PM,Gochujang Riblets,For the Table,FOOD,Food,24.00,1.0,false
+38,4/30/26 7:59 PM,Rice Cake Royale,For the Table,FOOD,Food,23.00,1.0,false
+38,4/30/26 7:59 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,16.00,1.0,false
+38,4/30/26 7:59 PM,Melon Muse,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+38,4/30/26 7:59 PM,Fresh Start,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+40,4/30/26 8:03 PM,Fire Chicken Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,18.00,1.0,false
+40,4/30/26 8:03 PM,Korean Fried Chicken Wings,STARTERS,PERILLA TO-GO,Food,22.00,1.0,false
+45,4/30/26 8:07 PM,Broth,Course 1,FOOD,Food,0.00,2.0,false
+45,4/30/26 8:07 PM,Banchan Set,Course 1,FOOD,Food,0.00,1.0,false
+45,4/30/26 8:07 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,2.0,false
+42,4/30/26 8:16 PM,Korean Meal Plate,PLATES & BOWLS,PERILLA TO-GO,Food,25.00,1.0,false
+42,4/30/26 8:16 PM,Side: Gochujang Sauce,SIDES,PERILLA TO-GO,Food,1.00,1.0,false
+42,4/30/26 8:16 PM,Banchan Set,BANCHAN,PERILLA TO-GO,Food,8.00,1.0,false
+42,4/30/26 8:16 PM,Milkis,DRINKS,PERILLA TO-GO,NA Beverage,3.00,1.0,false
+41,4/30/26 8:19 PM,Melon Muse,COCKTAILS,BEVERAGE,Liquor,16.00,1.0,false
+43,4/30/26 8:22 PM,Scallion Muchim,BANCHAN,PERILLA TO-GO,Food,6.00,1.0,false
+43,4/30/26 8:22 PM,Bibimbop,PLATES & BOWLS,PERILLA TO-GO,Food,20.00,1.0,false
+41,4/30/26 8:20 PM,Broth,Course 1,FOOD,Food,0.00,5.0,false
+41,4/30/26 8:20 PM,Banchan Set,Course 1,FOOD,Food,0.00,2.0,false
+41,4/30/26 8:20 PM,Dipping Sauce,Course 1,FOOD,Food,0.00,5.0,false
+38,4/30/26 8:23 PM,Classic Tasting Plate,For the Grill,FOOD,Food,45.00,1.0,false
+45,4/30/26 8:26 PM,Chef's Tasting Plate,For the Grill,FOOD,Food,75.00,1.0,false
+45,4/30/26 8:26 PM,1/2 Korean Fried Chicken,For the Table,FOOD,Food,13.00,1.0,false
+45,4/30/26 8:26 PM,1/2 Scallion Pancake,For the Table,FOOD,Food,10.00,1.0,false
+45,4/30/26 8:26 PM,Kimchi Fried Rice,Stews/Rice,FOOD,Food,16.00,1.0,false
+45,4/30/26 8:28 PM,G-Hanna Takju 16,BY THE GLASS,BEVERAGE,Beer,16.00,1.0,false
+46,4/30/26 8:30 PM,Bulgogi Rice Bowl,PLATES & BOWLS,PERILLA TO-GO,Food,24.00,1.0,false
+9,4/30/26 8:32 PM,(5360) Chateau Grand Soussans '20,WINES BY THE BOTTLE,BEVERAGE,Wine,120.00,1.0,false
+41,4/30/26 8:34 PM,G-Chateau Les Vieilles Pierres,BY THE GLASS,BEVERAGE,Wine,16.00,1.0,false
+41,4/30/26 8:34 PM,Jinro 'Is Back',SOJU & MAKGEOLLI,BEVERAGE,Liquor,25.00,1.0,false
+41,4/30/26 8:34 PM,Best Day Brewing Non-Alcoholic Kolsch,BEER,BEVERAGE,Beer,9.00,1.0,false
+41,4/30/26 8:46 PM,Set Refill,Banchan/Accompaniments,FOOD,Food,0.00,1.0,false
+41,4/30/26 8:46 PM,Classic Tasting Plate,For the Grill,FOOD,Food,45.00,1.0,false
+41,4/30/26 8:46 PM,American F1 Bavette,For the Grill,FOOD,Food,21.60,1.0,false
+41,4/30/26 8:46 PM,Spicy Pork Collar,For the Grill,FOOD,Food,14.40,1.0,false
+41,4/30/26 8:46 PM,LA Galbi,For the Grill,FOOD,Food,19.20,1.0,false
+41,4/30/26 8:46 PM,Scallion Pancake,For the Table,FOOD,Food,16.00,1.0,false
+41,4/30/26 8:46 PM,Rice Cake Royale,For the Table,FOOD,Food,48.00,1.0,false
+41,4/30/26 8:46 PM,Gochujang Riblets,For the Table,FOOD,Food,0.00,1.0,false
+41,4/30/26 8:46 PM,Dwenjang Potatoes,For the Table,FOOD,Food,0.00,2.0,false
+41,4/30/26 8:46 PM,Korean Fried Chicken,For the Table,FOOD,Food,22.00,1.0,false
+41,4/30/26 8:46 PM,Soondubu Jjigae,Stews/Rice,FOOD,Food,0.00,1.0,false
+41,4/30/26 8:46 PM,Kimchi Fried Rice,Stews/Rice,FOOD,Food,9.60,1.0,false
+41,4/30/26 8:46 PM,Garlic Rice,Stews/Rice,FOOD,Food,6.60,1.0,false
+45,4/30/26 9:06 PM,Hopewell Brewing Co. 'Going Places' IPA,BEER,BEVERAGE,Beer,14.00,1.0,false
+41,4/30/26 9:08 PM,Moody Tongue,BEER,BEVERAGE,Beer,12.00,1.0,false
+45,4/30/26 9:10 PM,Moody Tongue,BEER,BEVERAGE,Beer,12.00,1.0,false
+9,4/30/26 9:24 PM,(5360) Chateau Grand Soussans '20,WINES BY THE BOTTLE,BEVERAGE,Wine,120.00,1.0,false
+45,4/30/26 9:38 PM,Hopewell Brewing Co. 'Going Places' IPA,BEER,BEVERAGE,Beer,14.00,1.0,false
+49,4/30/26 10:30 PM,Low Yield Theory,,,Wine,36.00,2.0,false
+49,4/30/26 10:33 PM,2019 Audeant Pinot,,,Wine,43.00,1.0,false
+49,4/30/26 10:33 PM,Whitcraft Chardonnay,,,Wine,45.00,1.0,false
+49,4/30/26 10:33 PM,Domaine De La Racauderie,,,Wine,15.00,1.0,false
