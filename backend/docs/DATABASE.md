@@ -82,7 +82,7 @@ Bootstrap (migrate + seed from files):
 
 ```bash
 brew install docker-compose   # if needed
-./scripts/start-postgres.sh
+./scripts/setup-postgres.sh
 ```
 
 ```env
@@ -92,7 +92,7 @@ DATABASE_URL=postgresql+psycopg://pantry:pantry@localhost:5432/pantry
 ### Option B — Homebrew Postgres
 
 ```bash
-./scripts/setup-postgres-brew.sh
+./scripts/setup-postgres.sh brew
 ```
 
 ```env

@@ -55,7 +55,7 @@ if [[ "$DOCKER_VOLUME" -eq 1 ]] && docker ps -a --format '{{.Names}}' 2>/dev/nul
   else
     docker compose down -v
   fi
-  ./scripts/start-postgres.sh
+  ./scripts/setup-postgres.sh docker
   echo "    Waiting for Postgres ..."
   sleep 3
 fi

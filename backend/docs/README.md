@@ -18,6 +18,16 @@
 
 All product data routes read/write **Postgres**. Dashboard, Forecasting, and Financials use **mock data in the frontend** only.
 
+## Scripts (from repo root)
+
+| Script | Purpose |
+|--------|---------|
+| `./scripts/setup-postgres.sh [docker\|brew]` | Start Docker Postgres or create Homebrew role/db |
+| `./scripts/bootstrap-db.sh [location]` | Migrate + seed from `data/toast/` |
+| `./scripts/reset-db.sh --yes [location]` | Wipe DB and re-run bootstrap |
+
+Ops beyond seeding (Toast pull) use `uv run python -m pantry_engine.cli` — see [RUNNING.md](./RUNNING.md).
+
 ## Quick commands (from `backend/`)
 
 ```bash

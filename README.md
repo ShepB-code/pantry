@@ -13,16 +13,13 @@ Pantry is an inventory intelligence project for restaurants. This repository con
 ### First-time setup (short)
 
 ```bash
-# 1. Check exports are in place (optional)
-./scripts/verify-setup.sh perilla
+# 1. Postgres (Docker) — or Homebrew; see backend/docs/DATABASE.md
+./scripts/setup-postgres.sh
 
-# 2. Postgres (Docker) — or use Homebrew; see backend/docs/DATABASE.md
-./scripts/start-postgres.sh
-
-# 3. Migrate + seed DB from files under data/toast/
+# 2. Migrate + seed DB from files under data/toast/
 ./scripts/bootstrap-db.sh perilla
 
-# 4. API + UI
+# 3. API + UI
 cd backend && uv run uvicorn app:app --reload --port 8000
 cd frontend && npm install && npm run dev   # http://localhost:8080
 ```
@@ -66,7 +63,7 @@ MVP schema: multi-location inventory, daily POS rollups, manual recipes, quick c
 ```bash
 # Postgres via Docker (requires Compose — not bundled with `brew install docker`)
 brew install docker-compose   # if `docker compose` is unknown
-./scripts/start-postgres.sh   # or: docker-compose up -d
+./scripts/setup-postgres.sh   # or: docker-compose up -d
 
 cd backend
 cp .env.example .env   # set DATABASE_URL
