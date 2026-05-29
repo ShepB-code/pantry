@@ -7,6 +7,11 @@ from pathlib import Path
 
 
 def main(argv: list[str] | None = None) -> int:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+    load_dotenv()
+
     parser = argparse.ArgumentParser(
         description="Pantry ingestion utilities (Toast nightly SFTP exports)."
     )
@@ -74,12 +79,24 @@ def main(argv: list[str] | None = None) -> int:
         help="Skip ItemSelectionDetails*.csv backfill",
     )
 
+    demo = sub.add_parser(
+        "demo-depletion",
+        help="Run minimal Toast SFTP depletion demo (Dipping Sauce → Worcestershire)",
+    )
+    demo.add_argument(
+        "--location",
+        default=None,
+        help="Location id (default: PANTRY_DEFAULT_LOCATION_ID)",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "toast-pull":
         return _cmd_toast_pull(args)
     if args.command == "db-seed":
         return _cmd_db_seed(args)
+    if args.command == "demo-depletion":
+        return _cmd_demo_depletion(args)
     return 1
 
 
@@ -211,6 +228,30 @@ def _cmd_db_seed(args: argparse.Namespace) -> int:
             print(f"pos: {path.name} — {out.get('days', 0)} day(s), {out.get('salesLines', 0)} lines")
         print(f"pos: total days ingested: {total_days}")
 
+    return 0
+
+
+def _cmd_demo_depletion(args: argparse.Namespace) -> int:
+    from pantry_engine.db.seed import default_location_id
+    from pantry_engine.demo.depletion import run_demo
+
+    try:
+        result = run_demo(location_id=args.location or default_location_id())
+    except Exception as exc:
+        print(f"demo-depletion failed: {exc}", file=sys.stderr)
+        return 1
+
+    setup = result["setup"]
+    depletion = result["apply"].get("depletion") or {}
+    print("Pantry depletion demo")
+    print(f"  Menu item sold: {setup['menuItem']} × {setup['salesQty']:.0f}")
+    print(f"  Recipe: {setup['qtyPerServing']} × {setup['ingredient']} per serving")
+    print(f"  Starting on hand: {setup['startingOnHand']}")
+    print(f"  Expected after:   {setup['expectedOnHandAfter']}")
+    print(f"  Actual on hand:   {result['endingOnHand']}")
+    print(f"  Depletion:        {depletion.get('message', '—')}")
+    print("")
+    print(f"Open Inventory → search for “{result['lookFor']}” (On Hand should be {setup['expectedOnHandAfter']}).")
     return 0
 
 

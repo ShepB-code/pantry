@@ -8,7 +8,7 @@ Pantry is an inventory intelligence project for restaurants. This repository con
 
 ## Run locally (MVP UI)
 
-**Full guide:** [backend/docs/RUNNING.md](backend/docs/RUNNING.md) · **Doc index:** [backend/docs/README.md](backend/docs/README.md) · **Data folders:** [data/toast/README.md](data/toast/README.md)
+**Full guide:** [backend/docs/RUNNING.md](backend/docs/RUNNING.md) · **Menu vs ingredients:** [backend/docs/DATA_SOURCES.md](backend/docs/DATA_SOURCES.md) · **Doc index:** [backend/docs/README.md](backend/docs/README.md) · **Data folders:** [data/toast/README.md](data/toast/README.md)
 
 ### First-time setup (short)
 
@@ -60,6 +60,7 @@ MVP schema: multi-location inventory, daily POS rollups, manual recipes, quick c
 
 - [Running locally](backend/docs/RUNNING.md) — **start here**
 - [Database setup](backend/docs/DATABASE.md) — Postgres, migrations, tables
+- [Data sources (Toast vs xtraCHEF)](backend/docs/DATA_SOURCES.md) — **menu items vs ingredients**
 - [Inventory & naming](backend/docs/INVENTORY.md) — data model and APIs
 
 ```bash

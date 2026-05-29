@@ -5,6 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { DataSourceBadge, type DataSourceKind } from "@/components/DataSourceBadge";
 
 interface MetricCardProps {
   title: React.ReactNode;
@@ -14,9 +15,10 @@ interface MetricCardProps {
   children?: React.ReactNode;
   className?: string;
   info?: string;
+  source?: DataSourceKind;
 }
 
-export function MetricCard({ title, value, change, positive, children, className, info }: MetricCardProps) {
+export function MetricCard({ title, value, change, positive, children, className, info, source }: MetricCardProps) {
   return (
     <div className={cn("bg-card rounded-lg border p-5 relative", className)}>
       {info && (
@@ -35,7 +37,10 @@ export function MetricCard({ title, value, change, positive, children, className
           </PopoverContent>
         </Popover>
       )}
-      <div className="text-sm text-muted-foreground mb-1 pr-6">{title}</div>
+      <div className="text-sm text-muted-foreground mb-1 pr-6 flex items-center gap-2 flex-wrap">
+        {title}
+        {source && <DataSourceBadge source={source} />}
+      </div>
       <p className="text-2xl font-bold tracking-tight">{value}</p>
       {change && (
         <p className={cn("text-xs mt-1 font-medium", positive ? "text-success" : "text-destructive")}>

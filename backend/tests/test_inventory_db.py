@@ -7,6 +7,7 @@ from pantry_engine.db.models import Base, LocationRecord
 from pantry_engine.db.quick_count_repo import QuickCountRepository
 from pantry_engine.db.seed import ensure_default_location
 from pantry_engine.db.session import clear_engine_cache, get_session_factory, init_db
+from pantry_engine.db.name_source import NAME_SOURCE_MANUAL, NAME_SOURCE_XTRACHEF
 
 import pandas as pd
 
@@ -124,8 +125,49 @@ class InventoryDbTest(unittest.TestCase):
                 session, location_id="test_loc", xchef=self._sample_xchef_row()
             )
         row = self.inventory.list_items()[0]
+        self.assertEqual(row["name"], "Salmon fillet")
         self.assertEqual(row["inventoryItem"], "Salmon fillet")
+        self.assertEqual(row["nameSource"], NAME_SOURCE_XTRACHEF)
         self.assertEqual(row["catalogSource"], "xtrachef")
+
+    def test_catalog_sync_uses_item_description_as_name(self) -> None:
+        df = self._sample_xchef_row().assign(
+            item_description="ALL PURPOSE FLOUR MEDALLION 2|25 LB BC",
+            item_key="all_purpose_flour",
+            product_s="Flour, AP",
+        )
+        with self.factory() as session:
+            upsert_xtrachef_catalog(session, location_id="test_loc", xchef=df)
+        row = self.inventory.list_items()[0]
+        self.assertEqual(row["name"], "ALL PURPOSE FLOUR MEDALLION 2|25 LB BC")
+        self.assertEqual(row["inventoryItem"], "ALL PURPOSE FLOUR MEDALLION 2|25 LB BC")
+        self.assertEqual(row["nameSource"], NAME_SOURCE_XTRACHEF)
+
+    def test_manual_name_preserved_on_catalog_resync(self) -> None:
+        with self.factory() as session:
+            upsert_xtrachef_catalog(
+                session, location_id="test_loc", xchef=self._sample_xchef_row()
+            )
+        self.inventory.set_name("salmon_fillet", "Kitchen salmon")
+        df = self._sample_xchef_row().assign(
+            item_description="SALMON FILLET ATLANTIC 10LB",
+            product_s="Salmon, Atlantic",
+        )
+        with self.factory() as session:
+            upsert_xtrachef_catalog(session, location_id="test_loc", xchef=df)
+        row = self.inventory.list_items()[0]
+        self.assertEqual(row["name"], "Kitchen salmon")
+        self.assertEqual(row["nameSource"], NAME_SOURCE_MANUAL)
+        self.assertEqual(row["inventoryItem"], "SALMON FILLET ATLANTIC 10LB")
+
+    def test_name_update(self) -> None:
+        with self.factory() as session:
+            upsert_xtrachef_catalog(
+                session, location_id="test_loc", xchef=self._sample_xchef_row()
+            )
+        updated = self.inventory.set_name("salmon_fillet", "Salmon")
+        self.assertEqual(updated["name"], "Salmon")
+        self.assertEqual(updated["nameSource"], NAME_SOURCE_MANUAL)
 
 
 if __name__ == "__main__":

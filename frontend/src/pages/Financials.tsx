@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MetricCard } from "@/components/MetricCard";
+import { DataSourceBadge, SectionLabel } from "@/components/DataSourceBadge";
 import { cn } from "@/lib/utils";
 import { X, AlertTriangle, ChevronRight, CheckCircle2, HelpCircle, Package, Truck, Scissors } from "lucide-react";
 
@@ -117,18 +118,24 @@ export default function Financials() {
 
   return (
     <div className="space-y-6 max-w-7xl">
-      <h1 className="text-2xl font-bold">Financials</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold">Financials</h1>
+        <DataSourceBadge source="mock" />
+        <span className="text-sm text-muted-foreground">
+          Entire page is placeholder UI for reference — not connected to the ledger yet.
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard title="Food Cost %" value="28.4%" change="1.2% vs last month" positive={false} info="Total food cost divided by food revenue for the current month, expressed as a percentage." />
-        <MetricCard title="Weekly Food Spend" value="$5,580" change="4% reduction" positive info="Sum of all food purchases received from suppliers over the past 7 days." />
-        <MetricCard title="Waste Cost (Weekly)" value="$312" change="18% reduction" positive info="Dollar value of food discarded this week, calculated from logged waste entries multiplied by each item's unit cost." />
-        <MetricCard title="Revenue (MTD)" value="$94,200" change="8% vs last month" positive info="Total sales recorded month-to-date, pulled directly from POS transactions." />
+        <MetricCard title="Food Cost %" value="28.4%" change="1.2% vs last month" positive={false} source="mock" info="Total food cost divided by food revenue for the current month, expressed as a percentage." />
+        <MetricCard title="Weekly Food Spend" value="$5,580" change="4% reduction" positive source="mock" info="Sum of all food purchases received from suppliers over the past 7 days." />
+        <MetricCard title="Waste Cost (Weekly)" value="$312" change="18% reduction" positive source="mock" info="Dollar value of food discarded this week, calculated from logged waste entries multiplied by each item's unit cost." />
+        <MetricCard title="Revenue (MTD)" value="$94,200" change="8% vs last month" positive source="mock" info="Total sales recorded month-to-date, pulled directly from POS transactions." />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card rounded-lg border p-5">
-          <h2 className="font-semibold mb-4">Budget vs. Actual</h2>
+          <SectionLabel title="Budget vs. Actual" source="mock" className="mb-4" />
           <div className="space-y-4">
             {budgetItems.map((b, i) => {
               const pct = Math.round((b.spent / b.budget) * 100);
@@ -151,7 +158,7 @@ export default function Financials() {
         </div>
 
         <div className="bg-card rounded-lg border p-5">
-          <h2 className="font-semibold mb-4">Profit Margin by Category</h2>
+          <SectionLabel title="Profit Margin by Category" source="mock" className="mb-4" />
           <div className="space-y-4">
             {profitMargins.map((p, i) => (
               <div key={i}>
@@ -169,12 +176,12 @@ export default function Financials() {
       </div>
 
       <div className="bg-card rounded-lg border p-5">
-        <div className="mb-4">
-          <h2 className="font-semibold">Variance Report</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Click any row to see AI-powered diagnostic — ranked causes and recommended actions.
-          </p>
-        </div>
+        <SectionLabel
+          title="Variance Report"
+          source="mock"
+          hint="Click any row to see AI-powered diagnostic — ranked causes and recommended actions."
+          className="mb-4"
+        />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

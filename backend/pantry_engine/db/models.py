@@ -25,7 +25,6 @@ class LocationRecord(Base):
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     name: Mapped[str] = mapped_column(String(256), nullable=False)
-    timezone: Mapped[str] = mapped_column(String(64), nullable=False, default="America/Chicago")
 
 
 class InventoryItemRecord(Base):
@@ -38,25 +37,29 @@ class InventoryItemRecord(Base):
     )
     id: Mapped[str] = mapped_column(String(128), primary_key=True)
     name: Mapped[str] = mapped_column(String(512), nullable=False)
+    name_source: Mapped[str | None] = mapped_column(String(32))
     catalog_name: Mapped[str | None] = mapped_column(String(512))
     catalog_source: Mapped[str | None] = mapped_column(String(32))
     category: Mapped[str | None] = mapped_column(String(128))
     unit: Mapped[str | None] = mapped_column(String(32))
     vendor_name: Mapped[str | None] = mapped_column(String(256))
-    item_code: Mapped[str | None] = mapped_column(String(128))
-    last_purchased_price: Mapped[float | None] = mapped_column(Float)
-    last_purchased_date: Mapped[date | None] = mapped_column(Date)
     on_hand: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     par_level: Mapped[float | None] = mapped_column(Float)
     last_count_source: Mapped[str | None] = mapped_column(String(32))
     last_counted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    catalog_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
 class MenuItemRecord(Base):
     __tablename__ = "menu_items"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["location_id", "direct_inventory_item_id"],
+            ["inventory_items.location_id", "inventory_items.id"],
+            name="fk_menu_items_direct_inventory",
+        ),
+    )
 
     location_id: Mapped[str] = mapped_column(
         String(64), ForeignKey("locations.id"), primary_key=True
@@ -65,6 +68,8 @@ class MenuItemRecord(Base):
     name: Mapped[str] = mapped_column(String(512), nullable=False)
     category: Mapped[str | None] = mapped_column(String(128))
     menu_group: Mapped[str | None] = mapped_column(String(128))
+    direct_inventory_item_id: Mapped[str | None] = mapped_column(String(128))
+    direct_qty_per_serving: Mapped[float | None] = mapped_column(Float)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
@@ -114,8 +119,6 @@ class PosSalesDailyRecord(Base):
     business_date: Mapped[date] = mapped_column(Date, nullable=False)
     menu_item_id: Mapped[str] = mapped_column(String(128), nullable=False)
     quantity: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    revenue: Mapped[float | None] = mapped_column(Float)
-    order_count: Mapped[int | None] = mapped_column(Integer)
     ingested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 

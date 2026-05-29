@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MetricCard } from "@/components/MetricCard";
+import { DataSourceBadge, SectionLabel } from "@/components/DataSourceBadge";
 import { Truck, AlertTriangle, Info, TrendingUp, ChevronLeft, ChevronRight, Lightbulb, RefreshCw } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -79,21 +79,10 @@ function formatRefreshTime(date: Date) {
   });
 }
 
+const revenueTrend = defaultRevenueTrend;
+const todayRev = revenueTrend[revenueTrend.length - 1].revenue;
+
 export default function Dashboard() {
-  const { data: revenueData } = useQuery({
-    queryKey: ['financials-revenue'],
-    queryFn: async () => {
-      const res = await fetch('/api/financials/revenue');
-      if (!res.ok) throw new Error('Network error');
-      return res.json();
-    }
-  });
-
-  const revenueTrend = revenueData || defaultRevenueTrend;
-  
-  // Calculate top line stats
-  const todayRev = revenueTrend.length ? revenueTrend[revenueTrend.length - 1].revenue : 0;
-
   const [windowIdx, setWindowIdx] = useState(1);
   const win = expiringWindows[windowIdx];
   const cycle = (dir: 1 | -1) =>
@@ -141,8 +130,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Today's Projected Revenue" value={`$${todayRev.toLocaleString()}`} change="Live POS Data" positive info="Estimated total sales for today, calculated from historical patterns for this weekday adjusted for current reservations and trends." />
-        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Food Cost %" value="28.4%" change="1.2% improvement vs last week" positive info="Cost of food sold divided by food revenue over the last 7 days, expressed as a percentage." />
+        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Today's Projected Revenue" value={`$${todayRev.toLocaleString()}`} change="sample data" positive source="mock" info="Placeholder until revenue is wired to Postgres POS rollups." />
+        <MetricCard className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200" title="Food Cost %" value="28.4%" change="1.2% improvement vs last week" positive source="mock" info="Cost of food sold divided by food revenue over the last 7 days, expressed as a percentage." />
         <MetricCard
           className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
           info="Count of inventory items reaching their use-by date within the selected window, based on receiving dates and shelf-life data."
@@ -173,6 +162,7 @@ export default function Dashboard() {
           value={String(win.value)}
           change={win.change}
           positive={win.positive}
+          source="mock"
         />
         <MetricCard
           className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
@@ -180,6 +170,7 @@ export default function Dashboard() {
           value="$312"
           change={wasteChange}
           positive={wasteDecreased}
+          source="mock"
           info="Dollar value of food discarded this week, calculated from logged waste entries multiplied by each item's unit cost."
         />
       </div>
@@ -189,8 +180,11 @@ export default function Dashboard() {
         <div className="lg:col-span-2 bg-card rounded-lg border p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-sm">Revenue vs Food Cost</h3>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-sm">Revenue vs Food Cost</h3>
+                <DataSourceBadge source="mock" />
+              </div>
+              <p className="text-xs text-muted-foreground">Last 7 days · sample data</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1.5">
@@ -224,7 +218,10 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-card rounded-lg border p-5">
-          <h3 className="font-semibold text-sm">Cost Breakdown</h3>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="font-semibold text-sm">Cost Breakdown</h3>
+            <DataSourceBadge source="mock" />
+          </div>
           <p className="text-xs text-muted-foreground mb-2">% of revenue</p>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
@@ -242,7 +239,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 bg-card rounded-lg border p-5 space-y-3">
-          <h2 className="font-semibold text-lg">Today's Alerts</h2>
+          <SectionLabel title="Today's Alerts" source="mock" />
           {alerts.map((a, i) => (
             <div key={i} className={`flex items-start gap-3 rounded-md p-3 ${a.bg}`}>
               <a.icon className={`h-4 w-4 mt-0.5 shrink-0 ${a.text}`} />
@@ -257,7 +254,10 @@ export default function Dashboard() {
 
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-card rounded-lg border p-5">
-            <h3 className="font-semibold text-sm">Waste by Category</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <h3 className="font-semibold text-sm">Waste by Category</h3>
+              <DataSourceBadge source="mock" />
+            </div>
             <p className="text-xs text-muted-foreground mb-3">This week ($)</p>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={wasteByCategory} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
@@ -274,6 +274,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 mb-3">
               <Truck className="h-4 w-4 text-muted-foreground" />
               <h3 className="font-semibold text-sm">Upcoming Deliveries</h3>
+              <DataSourceBadge source="mock" />
             </div>
             <div className="space-y-3">
               {deliveries.map((d, i) => (

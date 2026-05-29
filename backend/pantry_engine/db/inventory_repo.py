@@ -92,6 +92,27 @@ class InventoryRepository:
             session.refresh(row)
             return _item_to_dict(row)
 
+    def set_name(self, item_id: str, name: str) -> dict:
+        from pantry_engine.db.name_source import NAME_SOURCE_MANUAL
+
+        cleaned = name.strip()
+        if not cleaned:
+            raise ValueError("name must not be empty")
+        now = datetime.now(timezone.utc)
+        with self._session_factory() as session:
+            row = session.get(
+                InventoryItemRecord,
+                {"location_id": self.location_id, "id": item_id},
+            )
+            if row is None:
+                raise KeyError(item_id)
+            row.name = cleaned
+            row.name_source = NAME_SOURCE_MANUAL
+            row.updated_at = now
+            session.commit()
+            session.refresh(row)
+            return _item_to_dict(row)
+
 
 def _item_to_dict(row: InventoryItemRecord) -> dict:
     par = row.par_level
@@ -100,6 +121,7 @@ def _item_to_dict(row: InventoryItemRecord) -> dict:
     return {
         "id": row.id,
         "name": row.name,
+        "nameSource": row.name_source,
         "inventoryItem": row.catalog_name or row.name,
         "catalogSource": row.catalog_source or "xtrachef",
         "category": row.category or "Food",

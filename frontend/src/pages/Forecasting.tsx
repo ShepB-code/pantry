@@ -1,8 +1,7 @@
 import { MetricCard } from "@/components/MetricCard";
+import { DataSourceBadge, SectionLabel } from "@/components/DataSourceBadge";
 import { Button } from "@/components/ui/button";
 import { Cloud, Calendar, Trophy } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-
 
 const coverData = [140, 155, 180, 210, 245, 195, 115];
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -17,23 +16,18 @@ const poItems = [
 ];
 
 export default function Forecasting() {
-  const { data: forecasts, isLoading } = useQuery({
-    queryKey: ['menu-forecasts'],
-    queryFn: async () => {
-      const res = await fetch('/api/forecasts/menu?days=7');
-      if (!res.ok) throw new Error('Network response was not ok');
-      return res.json();
-    }
-  });
-
-  const dynamicPoItems = forecasts && forecasts.length > 0 ? forecasts : poItems;
-
   return (
     <div className="space-y-6 max-w-7xl">
-      <h1 className="text-2xl font-bold">Forecasting</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold">Forecasting</h1>
+        <DataSourceBadge source="mock" />
+        <span className="text-sm text-muted-foreground">
+          Placeholder UI — not connected to the forecasting engine or database yet.
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MetricCard title="Projected Covers This Week" value="1,240" info="Forecasted number of guests served this week, based on prior weeks' covers adjusted for reservations, weather, and local events.">
+        <MetricCard title="Projected Covers This Week" value="1,240" source="mock" info="Forecasted number of guests served this week, based on prior weeks' covers adjusted for reservations, weather, and local events.">
           <div className="flex items-end gap-1 mt-3 h-12">
             {coverData.map((v, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -43,14 +37,14 @@ export default function Forecasting() {
             ))}
           </div>
         </MetricCard>
-        <MetricCard title="Forecast Accuracy (4 Weeks)" value="94.2%" change="5.2% improvement" positive info="Average accuracy of cover forecasts vs actual covers over the last 4 weeks, calculated as 100% minus mean absolute percentage error.">
+        <MetricCard title="Forecast Accuracy (4 Weeks)" value="94.2%" change="5.2% improvement" positive source="mock" info="Average accuracy of cover forecasts vs actual covers over the last 4 weeks, calculated as 100% minus mean absolute percentage error.">
           <div className="flex items-end gap-1 mt-3 h-8">
             {[91, 89, 93, 94].map((v, i) => (
               <div key={i} className="flex-1 bg-primary/60 rounded-sm" style={{ height: `${(v / 100) * 32}px` }} />
             ))}
           </div>
         </MetricCard>
-        <MetricCard title="External Factors Detected" value="" info="Outside signals (weather, sports, holidays, local events) detected for the upcoming week that may shift demand from baseline.">
+        <MetricCard title="External Factors Detected" value="" source="mock" info="Outside signals (weather, sports, holidays, local events) detected for the upcoming week that may shift demand from baseline.">
           <div className="space-y-2 mt-1">
             <div className="flex items-center gap-2 text-xs"><Cloud className="h-3.5 w-3.5 text-info" /><span className="text-info font-medium">Rain Thu-Fri</span><span className="text-muted-foreground">+15% dine-in</span></div>
             <div className="flex items-center gap-2 text-xs"><Trophy className="h-3.5 w-3.5 text-accent" /><span className="text-accent font-medium">Bulls game Sat</span><span className="text-muted-foreground">+25% bar traffic</span></div>
@@ -60,11 +54,12 @@ export default function Forecasting() {
       </div>
 
       <div className="bg-card rounded-lg border p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="font-semibold">Expected Dish Demand</h2>
-            <p className="text-xs text-muted-foreground">Next 7 Days based on POS + Weather Signals</p>
-          </div>
+        <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+          <SectionLabel
+            title="Expected Dish Demand"
+            source="mock"
+            hint="Next 7 days — sample purchase suggestions"
+          />
           <div className="flex gap-2">
             <Button variant="outline" size="sm">Adjust Forecast</Button>
             <Button size="sm">Export</Button>
@@ -83,22 +78,17 @@ export default function Forecasting() {
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="p-3 text-center text-muted-foreground">Loading forecasts...</td>
-                </tr>
-              ) : dynamicPoItems.map((r: any, i: number) => (
+              {poItems.map((r, i) => (
                 <tr key={i} className="border-b last:border-0">
-                  <td className="p-3 font-medium capitalize">{r.item}</td>
-                  <td className="p-3 text-muted-foreground">—</td>
+                  <td className="p-3 font-medium">{r.item}</td>
+                  <td className="p-3 text-muted-foreground">{r.stock}</td>
                   <td className="p-3 font-semibold text-primary">{r.need}</td>
-                  <td className="p-3 text-muted-foreground">—</td>
-                  <td className="p-3 text-muted-foreground">—</td>
-                  <td className="p-3 text-right text-muted-foreground">—</td>
+                  <td className="p-3 text-muted-foreground">{r.order}</td>
+                  <td className="p-3 text-muted-foreground">{r.unit}</td>
+                  <td className="p-3 text-right text-muted-foreground">{r.total}</td>
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </div>

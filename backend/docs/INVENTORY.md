@@ -2,6 +2,8 @@
 
 This document describes how Pantry represents stock, where names come from, and what is wired in the MVP. It reflects the current codebase (not a future design spec).
 
+**Start here if labels are confusing:** [DATA_SOURCES.md](./DATA_SOURCES.md) (Toast menu items vs xtraCHEF ingredients).
+
 ## Data sources
 
 | Source | Export / API | Lands in | Used for |
@@ -21,9 +23,9 @@ Pantry deals with **two separate matching problems**:
 ### 1. Catalog labels (inventory management system → Pantry row)
 
 - **Question:** “What does xtraCHEF call this line, and which DB row is it?”
-- **Answer today:** Automatic. `item_key` = `stable_key(item_description)` → `inventory_items.id`. Duplicate food rows may collapse using `Product(s)` during sync prep (`_dedupe_food_items` in `quick_count.py` / `catalog_sync.py`).
+- **Answer today:** Automatic. `item_key` from xtraCHEF → `inventory_items.id`. Catalog sync stores one row per `item_key` (first CSV row wins). No dedupe or display-name rules on ingest.
 - **UI:** **Inventory Item** column (`catalog_name`, source `catalog_source`, usually `xtrachef`).
-- **Not decided yet:** Standardizing kitchen-friendly names from messy vendor text (`Product(s)`, strip pack noise, overrides). Ingredient display rules are deferred.
+- **Manual override:** `PATCH /api/inventory/{id}/name` sets `name` with `name_source = manual`; preserved on resync.
 
 ### 2. Usage labels (Toast menu → inventory ingredient)
 
@@ -43,13 +45,14 @@ Toast POS ──sync──► menu_items + pos_sales_daily
 | Field | API (camelCase) | Meaning today |
 |-------|-----------------|---------------|
 | `id` | `id` | Stable slug from xtraCHEF `item_description` (`item_key`) |
-| `name` | `name` | Pantry “Ingredient” in UI; **same text as xtraCHEF description on sync** |
-| `catalog_name` | `inventoryItem` | Raw label from inventory system (`item_description` on sync) |
+| `name` | `name` | Same as xtraCHEF `item_description` on sync unless manually edited |
+| `name_source` | `nameSource` | `xtrachef` or `manual` |
+| `catalog_name` | `inventoryItem` | Raw `item_description` from xtraCHEF |
 | `catalog_source` | `catalogSource` | e.g. `xtrachef` |
-| `category`, `unit`, `vendor_name`, `item_code` | `category`, `unit`, `vendor` | From xtraCHEF row |
+| `category`, `unit`, `vendor_name` | `category`, `unit`, `vendor` | From xtraCHEF row |
 | `on_hand`, `par_level` | `onHand`, `parLevel` | Operational; par via API/UI |
 
-**Current Stock table:** **Ingredient** and **Inventory Item** often show identical text until display-name standardization sets `name` independently of `catalog_name`.
+**Current Stock table:** **Ingredient** and **Inventory Item** show the same xtraCHEF text until you edit the ingredient name manually.
 
 ## Catalog sync behavior
 
@@ -59,12 +62,12 @@ Triggered on API startup (when DB is available) and via:
 POST /api/inventory/sync-catalog
 ```
 
-- **Creates** new food rows from the latest xtraCHEF export.
-- **Updates** catalog fields (`name`, `catalog_name`, category, unit, vendor, prices, `catalog_updated_at`).
-- **Does not overwrite** existing `on_hand` or `par_level` (counts and par edits are preserved).
-- New rows start at `on_hand = 0` (`last_count_source = uninitialized`). Real counts should come from quick count and receiving (invoices).
+- **Creates** new rows from the latest xtraCHEF export (all rows with an `item_key`; no category filter on ingest).
+- **Updates** catalog fields from CSV as-is (`name`, `catalog_name`, category, unit, vendor).
+- **Does not overwrite** existing `on_hand`, `par_level`, or manually set `name`.
+- New rows start at `on_hand = 0` (`last_count_source = uninitialized`).
 
-Food filter: rows must look like food categories (`_is_food_row`); supplies/disposables are excluded.
+Data cleaning (food-only filter, dedupe, display names) is deferred — see quick count, which still reads xtraCHEF CSV directly for item selection scoring.
 
 ## HTTP API (inventory)
 

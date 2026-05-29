@@ -33,7 +33,11 @@ uv run uvicorn app:app --reload --port 8000
 |-------------|-------------|
 | Inventory → Current Stock | `GET /api/inventory` (database) |
 | Inventory → Quick Count | `GET /api/inventory/quick-count` |
-| Menu / Recipes | Partially API (`/api/menu/stats`); some mock UI |
+| Menu / Recipes | `GET /api/menu/recipes`, recipe builder — mock price alerts labeled |
+| Dashboard, Forecasting, Financials | **Mock data in the UI** (no backend routes) |
+| Suppliers → invoice upload | `POST /api/upload/invoice` (Gemini demo) |
+
+**Data source badges:** `Mock` = placeholder UI; `Live` = API/database; `Partial` = mix of live and placeholder. See `src/components/DataSourceBadge.tsx`.
 
 ## Scripts
 

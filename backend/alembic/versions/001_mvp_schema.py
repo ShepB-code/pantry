@@ -1,4 +1,4 @@
-"""MVP schema: locations, inventory, menu, recipes, POS daily, quick count, ingestion.
+"""Current MVP schema — inventory, menu, recipes, POS sales, quick count, ingestion.
 
 Revision ID: 001
 Revises:
@@ -22,24 +22,22 @@ def upgrade() -> None:
         "locations",
         sa.Column("id", sa.String(64), primary_key=True),
         sa.Column("name", sa.String(256), nullable=False),
-        sa.Column("timezone", sa.String(64), nullable=False, server_default="America/Chicago"),
     )
     op.create_table(
         "inventory_items",
         sa.Column("location_id", sa.String(64), sa.ForeignKey("locations.id"), primary_key=True),
         sa.Column("id", sa.String(128), primary_key=True),
         sa.Column("name", sa.String(512), nullable=False),
+        sa.Column("name_source", sa.String(32)),
+        sa.Column("catalog_name", sa.String(512)),
+        sa.Column("catalog_source", sa.String(32)),
         sa.Column("category", sa.String(128)),
         sa.Column("unit", sa.String(32)),
         sa.Column("vendor_name", sa.String(256)),
-        sa.Column("item_code", sa.String(128)),
-        sa.Column("last_purchased_price", sa.Float()),
-        sa.Column("last_purchased_date", sa.Date()),
         sa.Column("on_hand", sa.Float(), nullable=False, server_default="0"),
         sa.Column("par_level", sa.Float()),
         sa.Column("last_count_source", sa.String(32)),
         sa.Column("last_counted_at", sa.DateTime(timezone=True)),
-        sa.Column("catalog_updated_at", sa.DateTime(timezone=True)),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
     )
@@ -50,7 +48,14 @@ def upgrade() -> None:
         sa.Column("name", sa.String(512), nullable=False),
         sa.Column("category", sa.String(128)),
         sa.Column("menu_group", sa.String(128)),
+        sa.Column("direct_inventory_item_id", sa.String(128)),
+        sa.Column("direct_qty_per_serving", sa.Float()),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["location_id", "direct_inventory_item_id"],
+            ["inventory_items.location_id", "inventory_items.id"],
+            name="fk_menu_items_direct_inventory",
+        ),
     )
     op.create_table(
         "recipe_lines",
@@ -78,8 +83,6 @@ def upgrade() -> None:
         sa.Column("business_date", sa.Date(), nullable=False),
         sa.Column("menu_item_id", sa.String(128), nullable=False),
         sa.Column("quantity", sa.Float(), nullable=False, server_default="0"),
-        sa.Column("revenue", sa.Float()),
-        sa.Column("order_count", sa.Integer()),
         sa.Column("ingested_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(
             ["location_id", "menu_item_id"],
