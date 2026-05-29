@@ -3,6 +3,7 @@ import type { QuickCountLineSubmission, QuickCountSession } from "@/types/invent
 export interface InventoryItemRow {
   id: string;
   name: string;
+  nameSource: string | null;
   inventoryItem: string;
   catalogSource: string;
   category: string;
@@ -25,6 +26,22 @@ export interface InventoryResponse {
 export async function fetchInventory(): Promise<InventoryResponse> {
   const res = await fetch("/api/inventory");
   if (!res.ok) throw new Error("Failed to load inventory");
+  return res.json();
+}
+
+export async function updateIngredientName(
+  itemId: string,
+  name: string,
+): Promise<InventoryItemRow> {
+  const res = await fetch(`/api/inventory/${encodeURIComponent(itemId)}/name`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail ?? "Failed to update ingredient name");
+  }
   return res.json();
 }
 

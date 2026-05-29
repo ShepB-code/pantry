@@ -7,6 +7,11 @@ from pathlib import Path
 
 
 def main(argv: list[str] | None = None) -> int:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+    load_dotenv()
+
     parser = argparse.ArgumentParser(
         description="Pantry ingestion utilities (Toast nightly SFTP exports)."
     )

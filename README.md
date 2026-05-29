@@ -8,21 +8,18 @@ Pantry is an inventory intelligence project for restaurants. This repository con
 
 ## Run locally (MVP UI)
 
-**Full guide:** [backend/docs/RUNNING.md](backend/docs/RUNNING.md) · **Doc index:** [backend/docs/README.md](backend/docs/README.md) · **Data folders:** [data/toast/README.md](data/toast/README.md)
+**Full guide:** [backend/docs/RUNNING.md](backend/docs/RUNNING.md) · **Menu vs ingredients:** [backend/docs/DATA_SOURCES.md](backend/docs/DATA_SOURCES.md) · **Doc index:** [backend/docs/README.md](backend/docs/README.md) · **Data folders:** [data/toast/README.md](data/toast/README.md)
 
 ### First-time setup (short)
 
 ```bash
-# 1. Check exports are in place (optional)
-./scripts/verify-setup.sh perilla
+# 1. Postgres (Docker) — or Homebrew; see backend/docs/DATABASE.md
+./scripts/setup-postgres.sh
 
-# 2. Postgres (Docker) — or use Homebrew; see backend/docs/DATABASE.md
-./scripts/start-postgres.sh
-
-# 3. Migrate + seed DB from files under data/toast/
+# 2. Migrate + seed DB from files under data/toast/
 ./scripts/bootstrap-db.sh perilla
 
-# 4. API + UI
+# 3. API + UI
 cd backend && uv run uvicorn app:app --reload --port 8000
 cd frontend && npm install && npm run dev   # http://localhost:8080
 ```
@@ -60,12 +57,13 @@ MVP schema: multi-location inventory, daily POS rollups, manual recipes, quick c
 
 - [Running locally](backend/docs/RUNNING.md) — **start here**
 - [Database setup](backend/docs/DATABASE.md) — Postgres, migrations, tables
+- [Data sources (Toast vs xtraCHEF)](backend/docs/DATA_SOURCES.md) — **menu items vs ingredients**
 - [Inventory & naming](backend/docs/INVENTORY.md) — data model and APIs
 
 ```bash
 # Postgres via Docker (requires Compose — not bundled with `brew install docker`)
 brew install docker-compose   # if `docker compose` is unknown
-./scripts/start-postgres.sh   # or: docker-compose up -d
+./scripts/setup-postgres.sh   # or: docker-compose up -d
 
 cd backend
 cp .env.example .env   # set DATABASE_URL

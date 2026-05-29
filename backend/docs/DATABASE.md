@@ -4,126 +4,100 @@ PostgreSQL in production; SQLite fallback when `DATABASE_URL` is unset (local te
 
 To start the API and UI after the DB is up, see [RUNNING.md](./RUNNING.md).
 
-## Tables
+## Schema overview
+
+One Alembic revision (`001`) defines everything the MVP uses today. If you previously ran older multi-step migrations (`002`–`004`), reset the database:
+
+```bash
+./scripts/reset-db.sh --yes perilla
+```
+
+### Tables (all in use)
 
 | Table | Purpose |
 |-------|---------|
-| `locations` | Restaurants (`id`, `name`, `timezone`) |
-| `inventory_items` | xtraCHEF catalog + `on_hand` + `par_level` per location (see [INVENTORY.md](./INVENTORY.md)) |
-| `menu_items` | Toast menu items per location |
-| `recipe_lines` | Manual menu → inventory qty per serving |
-| `pos_sales_daily` | Daily sales rollup per menu item |
+| `locations` | Restaurant scope (`id`, `name`) |
+| `inventory_items` | xtraCHEF catalog + `on_hand` + `par_level` |
+| `menu_items` | Toast menu items; optional direct depletion columns |
+| `recipe_lines` | Menu → inventory qty per serving |
+| `pos_sales_daily` | Daily units sold per menu item (depletion + recipe UI) |
 | `quick_count_sessions` / `quick_count_lines` | Physical counts |
-| `ingestion_runs` | Import audit (SFTP, upload, xtraCHEF) |
+| `ingestion_runs` | SFTP pull audit + dedup (`file_sha256`) |
 
 All operational data is scoped by `location_id`.
 
-## `inventory_items` (naming columns)
+### `inventory_items`
 
-| Column | Role |
-|--------|------|
-| `id` | Stable key from xtraCHEF `item_description` (`item_key`) |
-| `name` | Pantry ingredient label in UI (today: same as xtraCHEF description on sync) |
-| `catalog_name` | Raw inventory-system label (xtraCHEF `item_description`) |
-| `catalog_source` | e.g. `xtrachef` |
+| Column | Used for |
+|--------|----------|
+| `id` | Stable xtraCHEF `item_key` |
+| `name`, `name_source` | Kitchen label + provenance (`xtrachef` or `manual`) |
+| `catalog_name`, `catalog_source` | Raw vendor description |
+| `category`, `unit`, `vendor_name` | Display + quick count (vendor from CSV at runtime) |
+| `on_hand`, `par_level` | Stock UI, depletion, quick count |
+| `last_count_source`, `last_counted_at` | Count / depletion audit |
+| `created_at`, `updated_at` | Row lifecycle |
 
-Ingredient vs inventory-system naming and Toast↔inventory matching are documented in [INVENTORY.md](./INVENTORY.md).
+Not stored in DB (read from xtraCHEF CSV at runtime when needed): `item_code`, purchase price/date — quick count prioritization uses the export file, not persisted catalog metadata.
+
+### `pos_sales_daily`
+
+Stores **quantity only** per menu item per day. Revenue is not persisted yet; Dashboard/Financials show frontend mock data until POS revenue rollups are added.
+
+### `menu_items` direct depletion
+
+| Column | Purpose |
+|--------|---------|
+| `direct_inventory_item_id` | Singular ingredient link (e.g. scallop) |
+| `direct_qty_per_serving` | Units depleted per sale |
 
 ## Wired today
 
-- **xtraCHEF** → `POST /api/inventory/sync-catalog` or API startup sync into `inventory_items` (does not overwrite `on_hand` / `par_level` on existing rows).
-- **Quick count** → `quick_count_sessions` / `quick_count_lines`; updates `inventory_items.on_hand`.
-- **Par** → `PATCH /api/inventory/{item_id}/par` with `{ "parLevel": 20 }`.
-- **Stock UI** → `GET /api/inventory` returns `items` (includes `inventoryItem`, `catalogSource`) + `onHand` map.
+- **xtraCHEF** → `inventory_items` via startup sync or `POST /api/inventory/sync-catalog`
+- **Toast MenuItem_Export** → `menu_items` via startup or `POST /api/menu/sync-export`
+- **Toast ItemSelectionDetails** → `menu_items` + `pos_sales_daily` via `db-seed`, SFTP pull + `--apply`, or `POST /api/ingestion/toast/apply`
+- **Recipes** → `recipe_lines` + optional direct depletion on `menu_items`
+- **Depletion** → `apply_sales_depletion` after sales ingest
+- **Quick count** → updates `on_hand`
+- **Par / name** → `PATCH /api/inventory/{id}/par`, `PATCH /api/inventory/{id}/name`
+
+See [DATA_SOURCES.md](./DATA_SOURCES.md) and [INVENTORY.md](./INVENTORY.md).
 
 ## Migrations
 
-| Revision | Change |
-|----------|--------|
-| `001` | MVP tables |
-| `002` | `inventory_items.catalog_name`, `catalog_source` |
+```bash
+cd backend
+uv run alembic upgrade head
+```
 
-## Not wired yet
+Bootstrap (migrate + seed from files):
 
-- **Toast POS** → `menu_items`, `pos_sales_daily`; optional depletion via `recipe_lines` (see [INVENTORY.md](./INVENTORY.md)).
+```bash
+./scripts/bootstrap-db.sh perilla
+```
 
 ## Local PostgreSQL
 
-### Option A — Docker (repo `docker-compose.yml`)
-
-Homebrew’s `docker` formula does **not** include Compose. If you see `docker: unknown command: docker compose`, install Compose separately:
+### Option A — Docker
 
 ```bash
-brew install docker-compose
+brew install docker-compose   # if needed
+./scripts/setup-postgres.sh
 ```
-
-Start the database (from repo root):
-
-```bash
-./scripts/start-postgres.sh
-# or: docker-compose up -d
-```
-
-Connection string for `backend/.env`:
 
 ```env
 DATABASE_URL=postgresql+psycopg://pantry:pantry@localhost:5432/pantry
 ```
 
-Connect with `psql`:
+### Option B — Homebrew Postgres
 
 ```bash
-psql postgresql://pantry:pantry@localhost:5432/pantry
-```
-
-### Option B — Homebrew Postgres (no Docker)
-
-```bash
-brew install postgresql@16
-brew services start postgresql@16
-
-# Add CLI to PATH if needed (Apple Silicon):
-echo 'export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-
-Match Docker credentials (recommended if docs use `pantry` / `pantry`):
-
-```bash
-./scripts/setup-postgres-brew.sh
-psql postgresql://pantry:pantry@127.0.0.1:5432/pantry
+./scripts/setup-postgres.sh brew
 ```
 
 ```env
 DATABASE_URL=postgresql+psycopg://pantry:pantry@127.0.0.1:5432/pantry
 ```
-
-Or use your macOS superuser only (no `pantry` role):
-
-```bash
-createdb pantry
-```
-
-```env
-DATABASE_URL=postgresql+psycopg://YOUR_MAC_USERNAME@localhost:5432/pantry
-```
-
-```bash
-psql pantry
-```
-
-### Migrations and API
-
-```bash
-cd backend
-cp .env.example .env   # edit DATABASE_URL
-uv sync
-uv run alembic upgrade head
-uv run uvicorn app:app --reload --port 8000
-```
-
-Default location is created on API startup (`PANTRY_DEFAULT_LOCATION_ID`, `PANTRY_DEFAULT_LOCATION_NAME`).
-
-Without `DATABASE_URL`, the API uses SQLite at `data/ingest/ingestion_runs.db`.
 
 ## Health check
 
@@ -133,7 +107,9 @@ Without `DATABASE_URL`, the API uses SQLite at `data/ingest/ingestion_runs.db`.
 
 | Problem | Fix |
 |---------|-----|
-| `docker: unknown command: docker compose` | Run `brew install docker-compose`, then `docker-compose up -d` |
-| `unable to connect` on 5432 | Container not running: `./scripts/start-postgres.sh` or `brew services list` |
-| `role "pantry" does not exist` | Using Docker URL against Homebrew Postgres — switch `DATABASE_URL` to your OS user (Option B) |
-| `database "pantry" does not exist` | Run `createdb pantry` (Option B) or start Docker compose (Option A) |
+| `Can't locate revision` / migration mismatch | `./scripts/reset-db.sh --yes perilla` |
+| `column … does not exist` | Same — schema was squashed into `001` |
+| `docker: unknown command: docker compose` | `brew install docker-compose` |
+| `role "pantry" does not exist` | Use Homebrew setup script or fix `DATABASE_URL` |
+
+Without `DATABASE_URL`, the API uses SQLite at `data/ingest/ingestion_runs.db`.

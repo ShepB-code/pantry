@@ -2,6 +2,8 @@
 
 Exports on disk are **inputs** for seeding the database. The UI and API read from Postgres (or SQLite), not these files directly.
 
+**Confused about menu vs ingredients?** See [backend/docs/DATA_SOURCES.md](../../backend/docs/DATA_SOURCES.md).
+
 ## Per-restaurant folders
 
 Replace `{location}` with your `PANTRY_DEFAULT_LOCATION_ID` (e.g. `perilla`, `noriko`).

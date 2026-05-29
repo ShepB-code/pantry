@@ -49,11 +49,11 @@ uv sync
 ### 3. Start Postgres (if using it)
 
 ```bash
-# From repo root — Docker
-./scripts/start-postgres.sh
+# From repo root — Docker (default)
+./scripts/setup-postgres.sh
 
 # Or Homebrew — see DATABASE.md
-./scripts/setup-postgres-brew.sh
+./scripts/setup-postgres.sh brew
 ```
 
 ### 4. Migrate + seed the database
@@ -120,13 +120,16 @@ Run from `backend/` (same as `uv run python -m pantry_engine.cli`):
 
 Flags for `db-seed`: `--skip-xtrachef`, `--skip-menu-export`, `--skip-pos`, `--pos-file PATH` (repeatable).
 
-### Simulate Toast SFTP (local, no SSH)
+### Local SFTP simulation (no SSH)
+
+Requires `TOAST_SFTP_LOCAL_ROOT` and `TOAST_SFTP_EXPORT_ID` in `.env` (see `.env.example`). Copy an export into the local SFTP folder, then pull:
 
 ```bash
-./scripts/simulate-toast-sftp-drop.sh 2026-04-30 /path/to/ItemSelectionDetails.csv
+mkdir -p data/dev/toast-sftp/local_dev/20260430
+cp data/toast/pos/perilla/ItemSelectionDetails_2026-04-30.csv \
+   data/dev/toast-sftp/local_dev/20260430/ItemSelectionDetails.csv
+cd backend && uv run python -m pantry_engine.cli toast-pull --date 2026-04-30 --force --apply
 ```
-
-Requires `TOAST_SFTP_LOCAL_ROOT` and `TOAST_SFTP_EXPORT_ID` in `.env` (see `.env.example`).
 
 ### HTTP equivalents
 

@@ -26,7 +26,6 @@ def ensure_default_location(session: Session, *, location_id: str | None = None)
         LocationRecord(
             id=loc_id,
             name=default_location_name(),
-            timezone=os.environ.get("PANTRY_DEFAULT_TIMEZONE", "America/Chicago"),
         )
     )
     session.commit()

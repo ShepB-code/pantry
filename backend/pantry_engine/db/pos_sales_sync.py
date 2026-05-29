@@ -76,7 +76,7 @@ def ingest_item_selection_file_all_dates(
 
     # business_date -> mid -> aggregates
     daily_by_date: dict[date, dict[str, dict]] = defaultdict(
-        lambda: defaultdict(lambda: {"quantity": 0.0, "revenue": 0.0, "orders": set()})
+        lambda: defaultdict(lambda: {"quantity": 0.0})
     )
     menu_by_mid: dict[str, dict] = {}
 
@@ -92,10 +92,6 @@ def ingest_item_selection_file_all_dates(
             }
         bucket = daily_by_date[sale.business_date][mid]
         bucket["quantity"] += sale.quantity
-        if sale.revenue is not None:
-            bucket["revenue"] += sale.revenue
-        if sale.order_number:
-            bucket["orders"].add(sale.order_number)
 
     now = datetime.now(timezone.utc)
     # Upsert menu items once.
@@ -133,8 +129,6 @@ def ingest_item_selection_file_all_dates(
                     business_date=biz_date,
                     menu_item_id=mid,
                     quantity=bucket["quantity"],
-                    revenue=bucket["revenue"] or None,
-                    order_count=len(bucket["orders"]) or None,
                     ingested_at=now,
                 )
             )
@@ -165,9 +159,7 @@ def ingest_item_selection_file(
     ]
 
     menu_agg: dict[str, dict] = {}
-    daily_agg: dict[str, dict] = defaultdict(
-        lambda: {"quantity": 0.0, "revenue": 0.0, "orders": set()}
-    )
+    daily_agg: dict[str, dict] = defaultdict(lambda: {"quantity": 0.0})
 
     for sale in sales:
         mid = sale.menu_item_id
@@ -179,10 +171,6 @@ def ingest_item_selection_file(
             }
         bucket = daily_agg[mid]
         bucket["quantity"] += sale.quantity
-        if sale.revenue is not None:
-            bucket["revenue"] += sale.revenue
-        if sale.order_number:
-            bucket["orders"].add(sale.order_number)
 
     now = datetime.now(timezone.utc)
     for mid, info in menu_agg.items():
@@ -218,8 +206,6 @@ def ingest_item_selection_file(
                 business_date=business_date,
                 menu_item_id=mid,
                 quantity=bucket["quantity"],
-                revenue=bucket["revenue"] or None,
-                order_count=len(bucket["orders"]) or None,
                 ingested_at=now,
             )
         )

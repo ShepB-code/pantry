@@ -1,13 +1,14 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, ArrowUp, ArrowDown, Search, X, Zap } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, Search, X, Zap, Pencil, Check } from "lucide-react";
 import { QuickCountWizard } from "@/components/inventory/QuickCountWizard";
-import { fetchInventory } from "@/api/inventory";
+import { fetchInventory, updateIngredientName } from "@/api/inventory";
+import { DataSourceBadge } from "@/components/DataSourceBadge";
 
 function formatQty(value: number, unit: string) {
   const rounded = value % 1 === 0 ? String(Math.round(value)) : value.toFixed(1);
@@ -34,16 +35,31 @@ const countItems = [
 
 export default function Inventory() {
   const [counts, setCounts] = useState(countItems);
+  const queryClient = useQueryClient();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState("");
 
   const { data: inventory, isLoading: inventoryLoading, isError: inventoryError } = useQuery({
     queryKey: ["inventory"],
     queryFn: fetchInventory,
   });
 
+  const nameMutation = useMutation({
+    mutationFn: ({ itemId, name }: { itemId: string; name: string }) =>
+      updateIngredientName(itemId, name),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      setEditingId(null);
+      setEditDraft("");
+    },
+  });
+
   const stockData = useMemo(() => {
     if (!inventory?.items) return [];
     return inventory.items.map((item) => ({
+      id: item.id,
       name: item.name,
+      nameSource: item.nameSource,
       inventoryItem: item.inventoryItem,
       cat: item.category,
       onHand: formatQty(item.onHand, item.unit),
@@ -114,11 +130,22 @@ export default function Inventory() {
       });
     }
     return data;
-  }, [search, categoryFilter, statusFilter, sortCol, sortDir]);
+  }, [stockData, search, categoryFilter, statusFilter, sortCol, sortDir]);
 
   const hasActiveFilters = search.trim() || categoryFilter !== "All" || statusFilter !== "All";
 
   const clearFilters = () => { setSearch(""); setCategoryFilter("All"); setStatusFilter("All"); };
+
+  const startEditing = (item: (typeof stockData)[number]) => {
+    setEditingId(item.id);
+    setEditDraft(item.name);
+  };
+
+  const saveEditing = (itemId: string) => {
+    const trimmed = editDraft.trim();
+    if (!trimmed) return;
+    nameMutation.mutate({ itemId, name: trimmed });
+  };
 
   return (
     <div className="space-y-6 max-w-7xl">
@@ -126,13 +153,23 @@ export default function Inventory() {
 
       <Tabs defaultValue="current" className="w-full">
         <TabsList>
-          <TabsTrigger value="current">Current Stock</TabsTrigger>
-          <TabsTrigger value="expiring">Expiring Soon</TabsTrigger>
-          <TabsTrigger value="quick">
+          <TabsTrigger value="current" className="gap-1.5">
+            Current Stock
+            <DataSourceBadge source="live" />
+          </TabsTrigger>
+          <TabsTrigger value="expiring" className="gap-1.5">
+            Expiring Soon
+            <DataSourceBadge source="mock" />
+          </TabsTrigger>
+          <TabsTrigger value="quick" className="gap-1.5">
             <Zap className="h-3.5 w-3.5 mr-1" />
             Quick Count
+            <DataSourceBadge source="live" />
           </TabsTrigger>
-          <TabsTrigger value="counts">Full Count</TabsTrigger>
+          <TabsTrigger value="counts" className="gap-1.5">
+            Full Count
+            <DataSourceBadge source="mock" />
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="current" className="mt-4">
@@ -198,9 +235,45 @@ export default function Inventory() {
               <tbody>
                 {filteredData.length === 0 ? (
                   <tr><td colSpan={7} className="p-6 text-center text-muted-foreground text-sm">No items match your filters.</td></tr>
-                ) : filteredData.map((item, i) => (
-                  <tr key={i} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                    <td className="p-3 font-medium">{item.name}</td>
+                ) : filteredData.map((item) => (
+                  <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                    <td className="p-3 font-medium">
+                      {editingId === item.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <Input
+                            value={editDraft}
+                            onChange={(e) => setEditDraft(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") saveEditing(item.id);
+                              if (e.key === "Escape") setEditingId(null);
+                            }}
+                            className="h-8 text-sm"
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            onClick={() => saveEditing(item.id)}
+                            disabled={nameMutation.isPending}
+                            className="text-primary hover:text-primary/80"
+                            aria-label="Save ingredient name"
+                          >
+                            <Check className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 group">
+                          <span>{item.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => startEditing(item)}
+                            className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity"
+                            aria-label="Edit ingredient name"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      )}
+                    </td>
                     <td className="p-3 text-muted-foreground max-w-[280px] truncate" title={item.inventoryItem}>
                       {item.inventoryItem}
                     </td>
@@ -217,6 +290,10 @@ export default function Inventory() {
         </TabsContent>
 
         <TabsContent value="expiring" className="mt-4">
+          <p className="text-xs text-muted-foreground mb-4 flex items-center gap-2">
+            <DataSourceBadge source="mock" />
+            Sample expiry suggestions — not tied to inventory yet.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {expiringItems.map((item, i) => (
               <div key={i} className="bg-card rounded-lg border p-4 space-y-3">
@@ -239,7 +316,10 @@ export default function Inventory() {
         </TabsContent>
 
         <TabsContent value="counts" className="mt-4">
-          <p className="text-sm text-muted-foreground mb-4">Pantry estimates stock based on POS sales and deliveries. Confirm or adjust each item.</p>
+          <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2 flex-wrap">
+            <DataSourceBadge source="mock" />
+            Pantry estimates stock based on POS sales and deliveries. Confirm or adjust each item.
+          </p>
           <div className="bg-card rounded-lg border divide-y">
             {counts.map((item, i) => (
               <div key={i} className={cn("flex items-center gap-4 p-4", item.confirmed && "bg-primary-light/50")}>

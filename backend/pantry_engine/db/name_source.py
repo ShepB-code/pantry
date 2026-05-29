@@ -1,0 +1,2 @@
+NAME_SOURCE_XTRACHEF = "xtrachef"
+NAME_SOURCE_MANUAL = "manual"

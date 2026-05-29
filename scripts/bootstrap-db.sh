@@ -53,7 +53,11 @@ fi
 
 uv sync
 uv run alembic upgrade head
-uv run python -m pantry_engine.cli db-seed --location "${LOCATION}" "${EXTRA[@]}"
+if ((${#EXTRA[@]} > 0)); then
+  uv run python -m pantry_engine.cli db-seed --location "${LOCATION}" "${EXTRA[@]}"
+else
+  uv run python -m pantry_engine.cli db-seed --location "${LOCATION}"
+fi
 
 echo ""
 echo "Done. Next:"
